@@ -1,0 +1,14 @@
+{
+  "repository": "victron-venus/victron-venus.github.io",
+  "mode": "validation-only",
+  "default_branch": "feature/redirect",
+  "validation_workflows": [
+    "validate.yml"
+  ],
+  "local_checks": [
+    "bash scripts/ci.sh"
+  ],
+  "notes": [
+    "Community/static site syntax validation; this is not an application release pipeline."
+  ]
+}
