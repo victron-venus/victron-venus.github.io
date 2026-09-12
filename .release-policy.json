@@ -10,5 +10,6 @@
   ],
   "notes": [
     "Community/static site syntax validation; this is not an application release pipeline."
-  ]
+  ],
+  "visibility": "public"
 }
