@@ -2,9 +2,7 @@
   "repository": "victron-venus/victron-venus.github.io",
   "mode": "validation-only",
   "default_branch": "feature/redirect",
-  "validation_workflows": [
-    "validate.yml"
-  ],
+  "validation_workflows": ["validate.yml", "codeql.yml", "dependency-review.yml"],
   "local_checks": [
     "bash scripts/ci.sh"
   ],
