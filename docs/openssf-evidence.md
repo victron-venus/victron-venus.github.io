@@ -21,3 +21,9 @@ No license file is currently present. The owner must choose and publish a
 license before this repository can claim the corresponding OpenSSF criterion.
 Maintainer knowledge and report-response attestations also require direct owner
 confirmation. No awarded OpenSSF badge is claimed by this change.
+
+## Additional source-analysis coverage
+
+The [CodeQL workflow](../.github/workflows/codeql.yml) also analyzes the redirect JavaScript embedded in index.html. Existing language analyses remain enabled. Each language reports a separate analysis category; review its completed run and findings for the submitted revision. A passing GitHub Code Quality check does not substitute for these security analyses.
+
+The additional-source matrix also scans GitHub Actions workflows with CodeQL.
