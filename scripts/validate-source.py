@@ -40,7 +40,7 @@ for name in sorted(set(files)):
             if subprocess.run(command, cwd=root, capture_output=True, text=True).returncode:
                 raise ValueError("Syntax check failed")
         counts[kind] = counts.get(kind, 0) + 1
-    except (SyntaxError, ValueError, UnicodeError, yaml.YAMLError) as error:
+    except (SyntaxError, ValueError, yaml.YAMLError) as error:
         location = getattr(error, "lineno", None)
         mark = getattr(error, "problem_mark", None)
         if mark:
