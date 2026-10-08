@@ -9,7 +9,7 @@ import subprocess
 try:
     import yaml
 except ImportError:
-    raise SystemExit("Install the parser first: python3 -m pip install PyYAML==6.0.3")
+    raise SystemExit("Install the parser first: python3 -m pip install --require-hashes --only-binary=:all: -r .github/requirements-workflow-contracts.txt")
 
 root = Path(__file__).resolve().parents[1]
 policy = json.loads((root / ".release-policy.json").read_text())

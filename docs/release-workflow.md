@@ -1,51 +1,50 @@
-# CI and release operations — victron-venus/victron-venus.github.io
+# Website validation and publication
 
-The source of truth is `.release-policy.json`. `quality-gate.yml` runs the callable
-validation workflows and produces the required **CI gate** status on every PR
-and merge-queue commit. Missing, failed and skipped validation workflows fail
-the gate. Workflow and lockfile changes are included in validation.
+This repository supplies a fixed redirect from the organization root GitHub
+Pages address to `https://victron-venus.github.io/.github/`. It has no application
+packages or beta, RC and stable release channels. The current default branch is
+`feature/redirect`.
 
-## Local checks
+## Local validation
 
-Use Python 3.11+ for the CLI and the project toolchains documented in `scripts/ci.sh`.
-The scripts fail on missing dependencies and do not publish anything during checks.
+Use Python 3.12 and actionlint 1.7.12. Install the parser from its checked hashes:
 
-```bash
-python3 scripts/release.py check
-python3 scripts/release.py status
+```sh
+python3 -m pip install --require-hashes --only-binary=:all: -r .github/requirements-workflow-contracts.txt
+bash scripts/ci.sh
 ```
 
-Callable validation workflows:
-- `.github/workflows/validate.yml`
+The entry point checks Python, JSON, YAML and shell syntax, runs actionlint,
+verifies immutable workflow references and CI dependencies, and executes
+regression tests against the actual redirect HTML. It validates the fixed
+JavaScript, meta-refresh, canonical URL and clickable fallback without opening
+a browser or contacting the destination.
 
-## Nightly validation and deployment
+## Pull requests and scheduled checks
 
-This repository uses validation-only policy: PR/merge queue checks and staggered
-nightly validation. It does not publish synthetic application beta/RC releases.
-Infrastructure deployments remain manual and use the checks and explicit source
-approval declared by their deployment workflow. Terraform validation uses backend-disabled
-copies; a green syntax/validate job is not a reviewed plan or a deployment.
+`.release-policy.json` declares validation-only operation. `quality-gate.yml`
+runs the configuration contracts before these reusable workflows:
 
-## Project limits and rollout requirements
+- `validate.yml`: the local validation entry point.
+- `codeql.yml`: static analysis of the Python tools.
+- `dependency-review.yml`: dependency changes on pull requests.
 
-- Community/static site syntax validation; this is not an application release pipeline.
+The final **CI gate** requires every prerequisite to succeed. These checks run
+for pull requests, merge-queue entries, default-branch pushes, the nightly
+schedule and manual dispatch. A green gate covers the checked source commit;
+it does not publish the website or establish destination availability.
 
-For public repositories, merge and verify the workflows before enabling the
-additive Terraform **CI gate** ruleset. Where release/deployment workflows use
-environments, configure reviewers and default-branch-only policies. The governance
-repositories contain `release-standards.tf` and opt-in examples for public
-repositories only. Do not extend these requirements to private repositories by
-buying a plan or to workflows that have not landed.
+## Publication and verification
 
-Existing review/security rules remain in force. Physical hardware, real
-credentials/streams and production access are not implied by unit tests or builds.
+Website publication is managed separately through this repository's GitHub
+Pages settings. Changing the redirect requires a reviewed pull request and a
+successful CI gate. After an authorized publication, verify both the root URL
+and destination in a browser, including the clickable fallback with JavaScript
+disabled. CI cannot establish the live Pages configuration or browser behavior.
 
-The release engine/client are vendored from `victron-venus/venus-os-ci-toolkit`.
-They are excluded from consumer-specific formatting/type policy. Application
-release workflows run the mandatory Release tooling contracts job; validation-only
-projects receive the local client, whose contracts run in the toolkit. Update the toolkit source and rerun
-`scripts/install_release.py`; `--check` detects drift.
-
-References: [GitHub schedules](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule),
-[protected environments](https://docs.github.com/en/actions/how-tos/deploy/configure-and-manage-deployments/manage-environments),
-[artifact provenance](https://docs.github.com/en/rest/actions/artifacts).
+`scripts/release.py` is the vendored toolkit client. This repository uses its
+validation-only policy and does not invoke artifact publication or promotion.
+The local workflow-contract validator is also vendored from
+`victron-venus/venus-os-ci-toolkit`; preserve its regression tests when updating
+it. Review any generated workflow change against the repository's actual
+validation-only policy.
