@@ -7,6 +7,7 @@
 
 import importlib.util
 import json
+import shutil
 import tempfile
 import unittest
 from pathlib import Path
@@ -133,6 +134,30 @@ class WorkflowYAMLTests(unittest.TestCase):
             workflow = {"jobs": {"build": {"uses": "owner/repo/.github/workflows/build.yml@main"}}}
             with self.assertRaises(ValueError):
                 CONTRACTS.validate_generator_pins(root, {"other.yml": workflow})
+
+
+class WorkflowEntryTests(unittest.TestCase):
+    """Exercise entry-point checks against a complete copy of current workflows."""
+
+    def test_all_pr_event_forms_require_gate_membership(self):
+        for event in ("pull_request", "pull_request_target"):
+            for declaration in (event, "[" + event + "]", "\n  " + event + ": {}"):
+                with self.subTest(event=event, declaration=declaration):
+                    with tempfile.TemporaryDirectory() as directory:
+                        root = Path(directory)
+                        shutil.copytree(ROOT / ".github", root / ".github")
+                        shutil.copyfile(ROOT / ".release-policy.json", root / ".release-policy.json")
+                        workflow = root / ".github/workflows/outside.yml"
+                        workflow.write_text(
+                            "name: Outside validation\non: " + declaration + "\n"
+                            "jobs:\n  check:\n    runs-on: ubuntu-latest\n"
+                            "    timeout-minutes: 5\n    steps:\n      - run: true\n"
+                        )
+                        with self.assertRaisesRegex(ValueError, "outside.yml: PR validator is outside"):
+                            CONTRACTS.validate(root)
+
+    def test_existing_review_request_workflow_remains_allowed(self):
+        CONTRACTS.validate(ROOT)
 
 
 if __name__ == "__main__":

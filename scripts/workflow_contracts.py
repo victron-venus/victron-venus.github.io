@@ -10,7 +10,6 @@ from pathlib import Path
 
 import yaml
 
-
 COMMIT_SHA_PATTERN = r"[0-9a-f]{40}"
 QUALITY_GATE = "quality-gate.yml"
 
@@ -145,7 +144,9 @@ def _callable_workflow(workflows, visited, filename, chain=()):
     for name, job in workflow.get("jobs", {}).items():
         reference = job.get("uses", "")
         if reference.startswith("./.github/workflows/"):
-            _callable_workflow(workflows, visited, reference.rsplit("/", 1)[-1], (*chain, filename))
+            _callable_workflow(
+                workflows, visited, reference.rsplit("/", 1)[-1], (*chain, filename)
+            )
         elif "runs-on" in job and "timeout-minutes" not in job:
             raise ValueError(f"{filename}/{name}: an explicit timeout is required")
 
@@ -163,8 +164,12 @@ def validate_coverage_producer(producer, report, ref):
     """Keep a producer's exported artifact and shared pin aligned with policy."""
     name = "coverage-" + report["name"]
     if "uses" in producer:
-        workflow = {"cobertura": "python-ci.yml", "go": "go-ci.yml"}.get(report["format"])
-        expected = f"victron-venus/venus-os-ci-toolkit/.github/workflows/{workflow}@{ref}"
+        workflow = {"cobertura": "python-ci.yml", "go": "go-ci.yml"}.get(
+            report["format"]
+        )
+        expected = (
+            f"victron-venus/venus-os-ci-toolkit/.github/workflows/{workflow}@{ref}"
+        )
         if (
             workflow is None
             or producer["uses"] != expected
@@ -223,6 +228,16 @@ def validate_coverage_callers(policy, workflows, gate):
     return {reference}
 
 
+def _workflow_events(workflow):
+    """Normalize GitHub's scalar, sequence and mapping event declarations."""
+    triggers = workflow.get("on", {})
+    if isinstance(triggers, str):
+        return {triggers}
+    if isinstance(triggers, (dict, list)):
+        return set(triggers)
+    raise ValueError("Workflow event declaration must be a string, list or mapping")
+
+
 def validate(directory: Path, *, actions_only=False) -> None:
     """Reject duplicate validation triggers, missing gate jobs and mixed CodeQL pins."""
     policy = json.loads((directory / ".release-policy.json").read_text())
@@ -238,9 +253,15 @@ def validate(directory: Path, *, actions_only=False) -> None:
     visited = validate_graph(workflows, policy["validation_workflows"])
     for filename, workflow in workflows.items():
         if (
-            "pull_request" in workflow.get("on", {})
+            _workflow_events(workflow) & {"pull_request", "pull_request_target"}
             and filename not in visited
-            and filename not in {QUALITY_GATE, "auto-approve.yml", "auto-merge.yml"}
+            and filename
+            not in {
+                QUALITY_GATE,
+                "auto-approve.yml",
+                "auto-merge.yml",
+                "coderabbit-review.yml",
+            }
         ):
             raise ValueError(f"{filename}: PR validator is outside the required gate")
     gate = workflows[QUALITY_GATE]["jobs"]
