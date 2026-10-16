@@ -28,3 +28,5 @@ See [third-party notices](THIRD_PARTY_NOTICES.md) for imported helper notices an
 ## Maintenance and security evidence
 
 See [governance](GOVERNANCE.md), [Code of Conduct](CODE_OF_CONDUCT.md), [roadmap](ROADMAP.md), [source changes](CHANGELOG.md) and [quality evidence](docs/quality.md). Source revisions use complete Git identities; no synthetic application releases are created. Optional CLI status operations use the documented [transport profile](docs/transport-security.md).
+
+[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/15587/badge)](https://www.bestpractices.dev/projects/15587)
