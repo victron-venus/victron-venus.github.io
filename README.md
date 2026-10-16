@@ -19,3 +19,8 @@ See [CI and deployment workflow](docs/release-workflow.md) for required checks a
 <!-- ci-release-process:end -->
 
 Development checks and review expectations are in [CONTRIBUTING.md](CONTRIBUTING.md); private reporting guidance is in [SECURITY.md](SECURITY.md). [OpenSSF readiness evidence](docs/openssf-evidence.md) records verified controls and outstanding owner decisions.
+
+## License
+
+Original code, tests and documentation use the [MIT license](LICENSE).
+See [third-party notices](THIRD_PARTY_NOTICES.md) for imported helper notices and exclusions.

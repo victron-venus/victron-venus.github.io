@@ -17,8 +17,8 @@ live site. CI validates local syntax and workflow structure; it does not prove
 browser accessibility, deployment availability or the destination application's
 security. This repository does not release synthetic application packages.
 
-No license file is currently present. The owner must choose and publish a
-license before this repository can claim the corresponding OpenSSF criterion.
+The owner confirmed MIT publication for original source and documentation on
+2026-10-16. The root LICENSE and THIRD_PARTY_NOTICES.md record its scope.
 Maintainer knowledge and report-response attestations also require direct owner
 confirmation. No awarded OpenSSF badge is claimed by this change.
 

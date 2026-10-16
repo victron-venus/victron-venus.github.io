@@ -25,3 +25,5 @@ Submit a focused pull request against the current default branch,
 `feature/redirect`. Explain the behavior and validation. Preserve fixed HTTPS
 destinations and review changes to workflows or external dependencies carefully.
 Changes require successful CI and the repository's configured review rules.
+
+Contribute original material under the root MIT license only when you have the right to do so. Preserve imported material's copyright notices and license terms in THIRD_PARTY_NOTICES.md.
