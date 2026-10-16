@@ -17,3 +17,9 @@ Redirect changes must retain an explicit reviewed HTTPS destination. Workflow
 actions use immutable commit references, the parser dependency uses verified
 hashes, and CodeQL analyzes the Python tooling. Do not add secrets to HTML,
 repository files, CI logs or issue attachments.
+
+## Remediation and disclosure
+
+Publicly known medium-or-higher vulnerabilities must be addressed within 60 days of public knowledge; confirmation does not restart that clock. Prioritize critical issues, reproduce with synthetic inputs, record affected revisions, test the correction, coordinate disclosure and identify assigned advisories in source change notes. Credit reporters unless they request anonymity. No prior response history is inferred from this policy.
+
+The current [transport profile](docs/transport-security.md) and [quality evidence](docs/quality.md) state supported boundaries and dated findings.

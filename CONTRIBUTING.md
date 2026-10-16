@@ -12,7 +12,7 @@ Use Python 3.12 and actionlint 1.7.12. Install the checked dependency hashes and
 run the same local entry point used by CI:
 
 ```sh
-python3 -m pip install --require-hashes --only-binary=:all: -r .github/requirements-workflow-contracts.txt
+python3 -m pip install --require-hashes --only-binary=:all: -r .github/requirements-workflow-contracts.txt -r .github/requirements-lint.txt
 bash scripts/ci.sh
 ```
 
@@ -25,3 +25,13 @@ Submit a focused pull request against the current default branch,
 `feature/redirect`. Explain the behavior and validation. Preserve fixed HTTPS
 destinations and review changes to workflows or external dependencies carefully.
 Changes require successful CI and the repository's configured review rules.
+
+Contribute original material under the root MIT license only when you have the right to do so. Preserve imported material's copyright notices and license terms in THIRD_PARTY_NOTICES.md.
+
+## Participation and required regression coverage
+
+Follow the [Code of Conduct](CODE_OF_CONDUCT.md), [governance](GOVERNANCE.md) and [roadmap](ROADMAP.md). All contributors, including the primary maintainer, must add automated tests for major new functionality and regression tests for defect fixes, with relevant negative inputs. Use PEP8-compatible Python, existing JavaScript conventions and deterministic HTML/YAML formatting; address diagnostics rather than disabling checks globally.
+
+Follow [source publication](RELEASING.md) and update [change notes](CHANGELOG.md) for user-visible behavior and security fixes. Optional GitHub CLI status commands use the documented [transport profile](docs/transport-security.md).
+
+Install the pinned Python diagnostic tool with `python3 -m pip install --require-hashes --only-binary=:all: -r .github/requirements-lint.txt`. The local gate runs Ruff syntax/undefined-name/control-flow checks across authored and vendored Python with `--ignore-noqa`, plus the existing source, workflow and behavior checks. Maximum warning strictness is not claimed.
