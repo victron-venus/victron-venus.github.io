@@ -11,3 +11,16 @@ so that https://victron-venus.github.io/ lands on the site.
 To serve the site from this root directly instead: copy the contents of the
 `.github` repo's site files here (all internal URLs are relative, so they work at
 any base path), enable Pages, and drop the redirect.
+
+<!-- ci-release-process:start -->
+## CI and deployment
+
+See [CI and deployment workflow](docs/release-workflow.md) for required checks and local commands. This repository uses validation-only policy; application release channels do not apply.
+<!-- ci-release-process:end -->
+
+Development checks and review expectations are in [CONTRIBUTING.md](CONTRIBUTING.md); private reporting guidance is in [SECURITY.md](SECURITY.md). [OpenSSF readiness evidence](docs/openssf-evidence.md) records verified controls and outstanding owner decisions.
+
+## License
+
+Original code, tests and documentation use the [MIT license](LICENSE).
+See [third-party notices](THIRD_PARTY_NOTICES.md) for imported helper notices and exclusions.

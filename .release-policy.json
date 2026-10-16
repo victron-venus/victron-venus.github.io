@@ -1,0 +1,18 @@
+{
+  "repository": "victron-venus/victron-venus.github.io",
+  "mode": "validation-only",
+  "default_branch": "feature/redirect",
+  "validation_workflows": [
+    "validate.yml",
+    "codeql.yml",
+    "dependency-review.yml"
+  ],
+  "local_checks": [
+    "bash scripts/ci.sh"
+  ],
+  "notes": [
+    "Fixed HTTPS redirect and local source/workflow validation; no application release pipeline."
+  ],
+  "visibility": "public",
+  "single_entry_ci": true
+}
