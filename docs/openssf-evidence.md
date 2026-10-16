@@ -19,11 +19,15 @@ security. This repository does not release synthetic application packages.
 
 The owner confirmed MIT publication for original source and documentation on
 2026-10-16. The root LICENSE and THIRD_PARTY_NOTICES.md record its scope.
-Maintainer knowledge and report-response attestations also require direct owner
-confirmation. No awarded OpenSSF badge is claimed by this change.
+Maintainer knowledge and report-response attestations are recorded in
+[quality evidence](quality.md), following direct owner confirmation. No awarded OpenSSF badge is claimed by this change.
 
 ## Additional source-analysis coverage
 
 The [CodeQL workflow](../.github/workflows/codeql.yml) also analyzes the redirect JavaScript embedded in index.html. Existing language analyses remain enabled. Each language reports a separate analysis category; review its completed run and findings for the submitted revision. A passing GitHub Code Quality check does not substitute for these security analyses.
 
 The additional-source matrix also scans GitHub Actions workflows with CodeQL.
+
+## Ongoing process
+
+See [governance](../GOVERNANCE.md), [conduct](../CODE_OF_CONDUCT.md), [roadmap](../ROADMAP.md), [source publication](../RELEASING.md) and [transport boundaries](transport-security.md). Full Git identities and [change notes](../CHANGELOG.md) identify source revisions. No backup maintainer, complete accessibility assessment, fresh fuzz campaign or package-release certification is claimed.
