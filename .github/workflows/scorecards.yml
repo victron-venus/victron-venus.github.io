@@ -13,6 +13,7 @@ on:
     - cron: '20 7 * * 2'
   push:
     branches: ["feature/redirect"]
+  workflow_dispatch:
 
 # Declare default permissions as read only.
 permissions:
@@ -21,6 +22,7 @@ permissions:
 jobs:
   analysis:
     name: Scorecard analysis
+    if: github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
