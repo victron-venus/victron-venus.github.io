@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CI standards — Victron Venus Wiki</title>
+<meta name="description" content="CI/CD standards for victron-venus projects: reusable workflows from venus-os-ci-toolkit, SHA pinning, runner hardening, release rules, and version sync.">
+<link rel="canonical" href="https://victron-venus.github.io/wiki/ci-standards.html">
+<meta name="theme-color" content="#f4f3ec">
+<link rel="icon" type="image/png" href="/assets/img/logo.png">
+<link rel="stylesheet" href="/assets/css/style.css?v=20261030g">
+<link rel="stylesheet" href="/assets/css/elevate.css?v=20261030g">
+</head>
+<body class="docs-page">
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="nav">
+  <div class="container nav-inner">
+    <a class="brand" href="../" aria-label="Victron Venus home">
+      <img src="/assets/img/logo.png" alt="" width="22" height="22" class="brand-logo">
+      victron-venus
+    </a>
+    <nav class="nav-links" aria-label="Main navigation">
+      <a href="../projects.html">Projects</a>
+      <a href="architecture.html">Architecture</a>
+      <a href="./" aria-current="page">Docs</a>
+      <a class="nav-gh" href="https://github.com/victron-venus">GitHub&nbsp;↗</a>
+    </nav>
+<details class="mobile-nav"><summary>Menu</summary><nav class="mobile-links" aria-label="Mobile navigation">
+      <a href="../projects.html">Projects</a>
+      <a href="architecture.html">Architecture</a>
+      <a href="./" aria-current="page">Docs</a>
+      <a class="nav-gh" href="https://github.com/victron-venus">GitHub&nbsp;↗</a>
+    </nav></details><details class="doc-search"><summary aria-label="Search documentation">Search ↗</summary><div class="search-panel"><label for="docs-query">Search the documentation</label><input id="docs-query" type="search" placeholder="Try MQTT, battery or install" autocomplete="off"><p class="search-status" role="status">Enter a topic to find a guide.</p><ul class="search-results"></ul><a href="../wiki/">Browse all guides →</a></div></details>
+  </div>
+</header>
+
+<main id="main" class="container section">
+<div class="wiki-layout">
+
+<details class="wiki-drawer"><summary>Guides &amp; page contents</summary><nav class="wiki-nav" aria-label="Wiki navigation">
+  <span class="wn-label">Wiki</span>
+  <a href="./">Overview</a>
+  <a href="install.html">Install guide</a>
+  <a href="architecture.html">Architecture</a>
+  <a href="integration.html">Venus OS integration</a>
+  <a href="ci-standards.html" aria-current="page">CI standards</a>
+  <a href="contributing.html">Contributing</a>
+</nav></details>
+
+<article class="prose">
+<p class="eyebrow">04 · CI / CD</p>
+<h1 style="font-family:var(--font-display);font-size:clamp(1.7rem,2.5vw + 0.5rem,2.4rem);margin-top:0.75rem">How every repo ships</h1>
+<p style="margin-top:0.75rem">The
+<a href="https://github.com/victron-venus/venus-os-ci-toolkit">venus-os-ci-toolkit</a>
+provides shared workflows and release tooling. Each project defines its own
+validation commands and artifact requirements; follow its checked-in contribution
+and release guides.</p>
+
+<h2 id="section-1">Reusable workflows and tools</h2>
+<div class="table-scroll">
+<table>
+  <thead><tr><th>Workflow or tool</th><th>Purpose</th></tr></thead>
+  <tbody>
+    <tr><td>python-ci.yml</td><td>ruff lint · mypy · pytest · coverage gate → Codecov</td></tr>
+    <tr><td>go-ci.yml</td><td>golangci-lint · govulncheck · tests · coverage gate → Codecov</td></tr>
+    <tr><td><a href="https://github.com/victron-venus/venus-os-ci-toolkit/blob/main/tools/scorecard-scan/README.md">tools/scorecard-scan</a></td><td>Validates Scorecard results and writes SARIF; the calling workflow handles upload</td></tr>
+    <tr><td><a href="https://github.com/victron-venus/venus-os-ci-toolkit/blob/main/.github/workflows/auto-approve-reusable.yml">auto-approve-reusable.yml</a></td><td>Metadata-only approval for eligible pull requests under the configured author and reviewer policy</td></tr>
+  </tbody>
+</table>
+</div>
+
+<p>Consuming a toolkit workflow — always pinned to a full commit SHA:</p>
+<pre><code>jobs:
+  test:
+    uses: victron-venus/venus-os-ci-toolkit/.github/workflows/python-ci.yml@875762362bb31b4899bf02fdf9e835188dc5eb80</code></pre>
+
+<h2 id="section-2">Non-negotiable rules</h2>
+<ul>
+  <li><strong>Pin everything.</strong> Every <code>uses:</code> in every workflow resolves to a full
+  commit SHA — never a tag or branch. Tags move; SHAs don't. This is the supply-chain boundary.</li>
+  <li><strong>Harden runners.</strong> Workflows include
+  <code>step-security/harden-runner</code> to audit egress network calls.</li>
+  <li><strong>Never push to the default branch.</strong> Feature branch from the default branch, open a PR, let CI
+  and CodeQL pass, merge via review. Eligible, non-draft PRs receive auto-approval independently
+  of labels. The <code>automerge</code> label enables automatic merging after required checks
+  and review requirements are satisfied.</li>
+  <li><strong>Conventional Commits.</strong> <code>feat:</code>, <code>fix:</code>,
+  <code>docs:</code>, <code>chore:</code> — release tooling parses them.</li>
+  <li><strong>Approval and merge are separate.</strong> Follow the
+  <a href="https://github.com/victron-venus/venus-os-ci-toolkit/blob/main/docs/examples/auto-approve.yml">approval caller example</a>
+  and <a href="https://github.com/victron-venus/venus-os-ci-toolkit/blob/main/docs/AUTO_MERGE.md">merge policy guide</a>.
+  Keep approval jobs metadata-only and preserve the documented eligibility checks.</li>
+</ul>
+
+<h2 id="section-3">Releases</h2>
+<p>Application repositories use their <code>.release-policy.json</code>,
+<code>RELEASING.md</code> and <code>docs/release-workflow.md</code> to define checks,
+artifacts and release channels. The release pipeline creates immutable beta and
+RC candidates. Stable promotion requires approval and copies the verified,
+tested RC bytes without rebuilding. A GitHub release does not deploy production;
+container registry publication and deployment are separate operations.</p>
+<p>Use the target repository's release commands. Do not create release tags by
+hand or restore the retired direct-tag publication workflow. Infrastructure and
+community repositories run validation and explicit deployment instead of
+application release channels. See the
+<a href="https://github.com/victron-venus/.github/blob/main/docs/CI_CD_STRATEGY.md">organization release overview</a>.</p>
+
+<h2 id="section-4">Version synchronization</h2>
+<p>Review base-version changes through a pull request. The target repository's
+release policy declares which version files must agree; projects do not all use
+the same file names or package format. Release tooling allocates candidate
+versions, applies declared build-time version overlays and records the source
+revision and artifact checksums. Follow that repository's versioning guide
+rather than manually changing a version and pushing a tag.</p>
+
+<div class="callout">
+  <strong>Why so strict?</strong> These repos control physical hardware. A moved tag or an unreviewed
+  workflow edit is not a cosmetic risk — treat CI config with the same care as control code.
+</div>
+
+<p style="margin-top:2rem"><a href="contributing.html">Next: contributing a change →</a></p>
+</article>
+</div>
+</main>
+
+<footer>
+  <div class="container">
+    <p class="foot-note" style="margin-top:0;border:0;padding-top:0">Independent open-source projects. Not affiliated with Victron Energy B.V.
+    © <span data-year>2026</span> · <a href="https://github.com/victron-venus/.github">source of this site</a></p>
+  </div>
+</footer>
+
+<script src="/assets/js/main.js?v=20261030g" defer></script>
+<script src="/assets/js/site.js?v=20261030g" defer></script>
+<script src="/assets/js/app.js?v=20261030g" defer></script>
+</body>
+</html>

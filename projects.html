@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Projects — Victron Venus</title>
+<meta name="description" content="Public projects from the victron-venus organization and @4alvit: D-Bus services, thermostat control, ESPHome sensors, dashboards, forecasting, observability, and CI tooling for Victron Venus OS.">
+<link rel="canonical" href="https://victron-venus.github.io/projects.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Projects — Victron Venus">
+<meta property="og:description" content="Public projects for Victron Energy systems on Venus OS.">
+<meta property="og:url" content="https://victron-venus.github.io/projects.html">
+<meta name="theme-color" content="#151715">
+<link rel="icon" type="image/png" href="/assets/img/logo.png">
+<link rel="stylesheet" href="/assets/css/style.css?v=20261030g">
+<link rel="stylesheet" href="/assets/css/elevate.css?v=20261030g">
+</head>
+<body class="catalog-page">
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="nav">
+  <div class="container nav-inner">
+    <a class="brand" href="index.html" aria-label="Victron Venus home">
+      <img src="/assets/img/logo.png" alt="" width="22" height="22" class="brand-logo">
+      victron-venus
+    </a>
+    <nav class="nav-links" aria-label="Main navigation">
+      <a href="projects.html" aria-current="page">Projects</a>
+      <a href="wiki/architecture.html">Architecture</a>
+      <a href="wiki/">Docs</a>
+      <a class="nav-gh" href="https://github.com/victron-venus">GitHub&nbsp;↗</a>
+    </nav>
+<details class="mobile-nav"><summary>Menu</summary><nav class="mobile-links" aria-label="Mobile navigation">
+      <a href="projects.html" aria-current="page">Projects</a>
+      <a href="wiki/architecture.html">Architecture</a>
+      <a href="wiki/">Docs</a>
+      <a class="nav-gh" href="https://github.com/victron-venus">GitHub&nbsp;↗</a>
+    </nav></details><details class="doc-search"><summary aria-label="Search documentation">Search ↗</summary><div class="search-panel"><label for="docs-query">Search the documentation</label><input id="docs-query" type="search" placeholder="Try MQTT, battery or install" autocomplete="off"><p class="search-status" role="status">Enter a topic to find a guide.</p><ul class="search-results"></ul><a href="wiki/">Browse all guides →</a></div></details>
+  </div>
+</header>
+
+<main id="main" class="container section">
+
+<div class="sec-head">
+  <p class="eyebrow">Catalog</p>
+  <h1>Public project catalog</h1>
+  <p>Public repositories across the <a href="https://github.com/victron-venus">victron-venus</a> organization
+  and the <a href="https://github.com/4alvit">@4alvit</a> account. Filter by layer or search by name. Archived projects are separated below;
+  each maintained repository documents its own deployment requirements. The <a href="https://github.com/victron-venus/.github/blob/main/docs/DEPLOYMENT-EVIDENCE.md">deployment evidence index</a> separates released code, observed runtime behavior and physical acceptance. Cards show live GitHub activity when the public API is reachable.</p>
+</div>
+
+<div class="catalog-live" data-live-state="loading" aria-live="polite">
+  <i class="live-dot" aria-hidden="true"></i>
+  <span data-live-message>Curated project catalog</span>
+  <span class="catalog-count" data-catalog-count></span>
+</div>
+
+<fieldset class="filters">
+  <legend class="filter-legend">Filter projects by category</legend>
+  <button class="filter-btn" data-filter="all" aria-pressed="true">all</button>
+  <button class="filter-btn" data-filter="dbus" aria-pressed="false">d-bus services</button>
+  <button class="filter-btn" data-filter="sensing" aria-pressed="false">sensing &amp; firmware</button>
+  <button class="filter-btn" data-filter="control" aria-pressed="false">control &amp; policy</button>
+  <button class="filter-btn" data-filter="dashboards" aria-pressed="false">dashboards</button>
+  <button class="filter-btn" data-filter="voice" aria-pressed="false">voice &amp; displays</button>
+  <button class="filter-btn" data-filter="ai" aria-pressed="false">forecast &amp; ai</button>
+  <button class="filter-btn" data-filter="observability" aria-pressed="false">observability</button>
+  <button class="filter-btn" data-filter="gateways" aria-pressed="false">gateways</button>
+  <button class="filter-btn" data-filter="archived" aria-pressed="false">archived</button>
+  <button class="filter-btn" data-filter="tooling" aria-pressed="false">platform &amp; tooling</button>
+  <label class="skip-link" for="proj-search" style="position:absolute;left:-999px">Search projects</label>
+  <input class="search-box" id="proj-search" type="search" placeholder="search…" autocomplete="off">
+</fieldset>
+
+<section class="group">
+  <h2>Venus OS D-Bus services<span class="count">8</span></h2>
+  <p class="desc">Bridges for native <code>com.victronenergy.*</code> services and optional D-Bus diagnostics. Follow each package’s installation guide before deploying to a GX.</p>
+  <div class="grid-cards">
+    <article class="proj" data-tags="dbus battery">
+      <h3><a href="https://github.com/victron-venus/dbus-mqtt-battery">dbus-mqtt-battery<span class="ext">↗</span></a></h3>
+      <p>MQTT → D-Bus bridge for JBD BMS batteries on Venus OS, with DVCC support.</p>
+      <div class="proj-meta"><span class="lang lang-python">Python</span><span class="tag">battery</span><span class="tag">dvcc</span><span class="org-chip">org</span></div>
+    </article>
+    <article class="proj" data-tags="dbus solar pv">
+      <h3><a href="https://github.com/victron-venus/dbus-tasmota-pv">dbus-tasmota-pv<span class="ext">↗</span></a></h3>
+      <p>Tasmota power meter → D-Bus PV inverter bridge. Turns a smart plug into a PV meter.</p>
+      <div class="proj-meta"><span class="lang lang-python">Python</span><span class="tag">pv-inverter</span><span class="tag">tasmota</span><span class="org-chip">org</span></div>
+    </article>
+    <article class="proj" data-tags="dbus sensing grid">
+      <h3><a href="https://github.com/victron-venus/dbus-esphome-grid-sensor">dbus-esphome-grid-sensor<span class="ext">↗</span></a></h3>
+      <p>ESP32 CT sensor for grid power monitoring, exposed as a D-Bus service on Venus OS.</p>
+      <div class="proj-meta"><span class="lang lang-python">Python</span><span class="tag">esp32</span><span class="tag">grid</span><span class="org-chip">org</span></div>
+    </article>
+    <article class="proj" data-tags="dbus sensing">
+      <h3><a href="https://github.com/victron-venus/dbus-emporia-vue">dbus-emporia-vue<span class="ext">↗</span></a></h3>
+      <p>Emporia Vue submeter channels as individual D-Bus AC loads, fed by Home Assistant WebSocket power data.</p>
+      <div class="proj-meta"><span class="lang lang-python">Python</span><span class="tag">submetering</span><span class="tag">acload</span><span class="org-chip">org</span></div>
+    </article>
+    <article class="proj" data-tags="dbus battery testing">
+      <h3><a href="https://github.com/victron-venus/dbus-virtual-battery">dbus-virtual-battery<span class="ext">↗</span></a></h3>
+      <p>Derived battery measurements for chains without a BMS. Consumes the MQTT battery driver’s freshness contract; does not establish physical BMS permission.</p>
+      <div class="proj-meta"><span class="lang lang-python">Python</span><span class="tag">derived-telemetry</span><span class="org-chip">org</span></div>
+    </article>
+    <article class="proj" data-tags="dbus ev vehicle charger mercedes home-assistant">
+      <h3><a href="https://github.com/victron-venus/dbus-ev">dbus-ev<span class="ext">↗</span></a></h3>
+      <p>Vehicle telemetry from Mercedes or Home Assistant, plus optional integrated Mercedes charger telemetry. Read the migration guide before replacing the archived standalone charger.</p>
+      <div class="proj-meta"><span class="lang lang-python">Python</span><span class="org-chip">org</span></div>
+    </article>
+    <article class="proj" data-tags="dbus water pump valve home-assistant">
+      <h3><a href="https://github.com/victron-venus/dbus-pump">dbus-pump<span class="ext">↗</span></a></h3>
+      <p>Home Assistant water tank, pump and valve data exposed as native Venus services, with the water automation and command path owned by this bridge.</p>
+      <div class="proj-meta"><span class="lang lang-python">Python</span><span class="org-chip">org</span></div>
+    </article>
+    <article class="proj" data-tags="dbus observability audit">
+      <h3><a href="https://github.com/victron-venus/dbus-event-log">dbus-event-log<span class="ext">↗</span></a></h3>
+      <p>Optional D-Bus event recorder with SQLite/TimescaleDB, MQTT and CLI tools. Method capture requires explicit bus permissions; it is not a lossless audit or a native SetupHelper package.</p>
+      <div class="proj-meta"><span class="lang lang-python">Python</span><span class="tag">audit-log</span><span class="tag">timescaledb</span><span class="org-chip">org</span></div>
+    </article>
+  </div>
+</section>
+
+<section class="group">
+  <h2>Sensing &amp; firmware<span class="count">2</span></h2>
+  <p class="desc">ESP32 firmware and reference patterns for the hardware side of the stack.</p>
+  <div class="grid-cards">
+    <article class="proj" data-tags="sensing esphome battery ble">
+      <h3><a href="https://github.com/victron-venus/esphome-jbd-bms-mqtt">esphome-jbd-bms-mqtt<span class="ext">↗</span></a></h3>
+      <p>ESP32 Bluetooth proxy for JBD BMS batteries, publishing cell voltages and SOC to MQTT.</p>
+      <div class="proj-meta"><span class="lang lang-yaml">ESPHome</span><span class="tag">ble</span><span class="tag">jbd-bms</span><span class="org-chip">org</span></div>
+    </article>
+    <article class="proj" data-tags="sensing esphome ble reference">
+      <h3><a href="https://github.com/4alvit/esphome-ble-sensor-patterns">esphome-ble-sensor-patterns<span class="ext">↗</span></a></h3>
+      <p>Production-ready ESPHome patterns for BLE sensors — iBeacon, Eddystone, custom services, passive scanning, HA integration.</p>
+      <div class="proj-meta"><span class="tag">ibeacon</span><span class="tag">xiaomi</span><span class="tag">reference</span><span class="org-chip">4alvit</span></div>
+    </article>
+  </div>
+</section>
+
+<section class="group">
+  <h2>Control &amp; policy<span class="count">2</span></h2>
+  <p class="desc">Inverter control and independently enabled thermostat coordination.</p>
+  <div class="grid-cards">
+    <article class="proj" data-tags="control ess grid-zero">
+      <h3><a href="https://github.com/victron-venus/inverter-control">inverter-control<span class="ext">↗</span></a></h3>
+      <p>Grid-zero feed-in control with Home Assistant integration and web dashboard. The core ESS brain of the stack.</p>
+      <div class="proj-meta"><span class="lang lang-python">Python</span><span class="tag">ess</span><span class="tag">quattro</span><span class="org-chip">org</span></div>
+    </article>
+    <article class="proj" id="inverter-climate" data-tags="control dbus climate home-assistant thermostat nest">
+      <h3><a href="https://github.com/victron-venus/inverter-climate">inverter-climate<span class="ext">↗</span></a></h3>
+      <p>Native Venus OS thermostat integration via Home Assistant and Google Nest. Publishes room temperature and optional setpoint and Heat/Off controls in the stock GUI v2 Switch pane and VRM Remote Console. Energy-aware preheating is enabled separately; observation is the default.</p>
+      <div class="proj-meta"><span class="lang lang-python">Python</span><span class="tag">thermostat</span><span class="tag">SetupHelper</span><span class="org-chip">org</span></div>
+    </article>
+  </div>
+</section>
+
+<section class="group">
+  <h2>Dashboards &amp; clients<span class="count">5</span></h2>
+  <p class="desc">Web, native and read-only public clients. Pick by deployment target.</p>
+  <div class="grid-cards">
+    <article class="proj" data-tags="dashboards go real-time">
+      <h3><a href="https://github.com/victron-venus/inverter-dashboard-go">inverter-dashboard-go<span class="ext">↗</span></a></h3>
+      <p>Real-time dashboard as a single Go binary — runs directly on the Cerbo GX, optional direct Home Assistant control.</p>
+      <div class="proj-meta"><span class="lang lang-go">Go</span><span class="tag">websocket</span><span class="tag">cerbo</span><span class="org-chip">org</span></div>
+    </article>
+    <article class="proj" data-tags="dashboards python docker">
+      <h3><a href="https://github.com/victron-venus/inverter-dashboard">inverter-dashboard<span class="ext">↗</span></a></h3>
+      <p>The original Python dashboard, shipped as Docker image <code>alvit/inverter-dashboard</code> for NAS deployments.</p>
+      <div class="proj-meta"><span class="lang lang-python">Python</span><span class="tag">docker</span><span class="org-chip">org</span></div>
+    </article>
+    <article class="proj" data-tags="dashboards vue components">
+      <h3><a href="https://github.com/victron-venus/inverter-dashboard-vue">inverter-dashboard-vue<span class="ext">↗</span></a></h3>
+      <p>Shared Vue&nbsp;3 SPA and reusable UI component library for the Go, Python and desktop dashboards.</p>
+      <div class="proj-meta"><span class="lang lang-vue">Vue</span><span class="tag">spa</span><span class="tag">ui-library</span><span class="org-chip">org</span></div>
+    </article>
+    <article class="proj" data-tags="dashboards desktop tauri vue">
+      <h3><a href="https://github.com/victron-venus/inverter-desktop">inverter-desktop<span class="ext">↗</span></a></h3>
+      <p>Tauri desktop client wrapping the Vue dashboard, with native installers per release.</p>
+      <div class="proj-meta"><span class="lang lang-vue">Vue</span><span class="tag">tauri</span><span class="org-chip">org</span></div>
+    </article>
+    <article class="proj" data-tags="dashboards web public read-only gateway">
+      <h3><a href="https://github.com/victron-venus/inverter-web-vitrine">inverter-web-vitrine<span class="ext">↗</span></a></h3>
+      <p>Read-only public status page backed by inverter-gateway through an authenticated server-side proxy. Access credentials stay off the browser.</p>
+      <div class="proj-meta"><span class="org-chip">org</span></div>
+    </article>
+  </div>
+</section>
+
+<section class="group">
+  <h2>Voice &amp; displays<span class="count">2</span></h2>
+  <p class="desc">Read-only reports from inverter-gateway. Energy statistics and freshness remain owned by the gateway; these adapters handle presentation.</p>
+  <div class="grid-cards">
+    <article class="proj" data-tags="voice alexa echo energy read-only">
+      <h3><a href="https://github.com/4alvit/amazon-echo-home-voice">amazon-echo-home-voice<span class="ext">↗</span></a></h3>
+      <p>Alexa custom skill backend for energy speech and screen cards. Uses authenticated gateway reports; developer setup, certification and physical device acceptance are separate steps.</p>
+      <div class="proj-meta"><span class="lang lang-python">Python</span><span class="org-chip">4alvit</span></div>
+    </article>
+    <article class="proj" data-tags="voice google nest cast energy read-only">
+      <h3><a href="https://github.com/4alvit/google-home-voice-stats">google-home-voice-stats<span class="ext">↗</span></a></h3>
+      <p>Standalone Cast video and speech reports using the gateway’s read-only energy API. Optional Home Assistant/Matter triggers add a voice entry point; Cast alone does not add voice commands.</p>
+      <div class="proj-meta"><span class="lang lang-python">Python</span><span class="org-chip">4alvit</span></div>
+    </article>
+  </div>
+</section>
+
+<section class="group">
+  <h2>Forecasting &amp; AI<span class="count">3</span></h2>
+  <p class="desc">Weather in, decisions out — plus an AI gateway into the whole system.</p>
+  <div class="grid-cards">
+    <article class="proj" data-tags="ai forecast langgraph solar">
+      <h3><a href="https://github.com/4alvit/solar-forecast-langgraph">solar-forecast-langgraph<span class="ext">↗</span></a></h3>
+      <p>LangGraph solar forecasts from weather and historical generation. Connecting a forecast to live control requires a configured and tested consumer.</p>
+      <div class="proj-meta"><span class="lang lang-python">Python</span><span class="tag">openmeteo</span><span class="tag">arima</span><span class="org-chip">4alvit</span></div>
+    </article>
+    <article class="proj" data-tags="ai rag docs fastapi">
+      <h3><a href="https://github.com/4alvit/energy-data-rag-pipeline">energy-data-rag-pipeline<span class="ext">↗</span></a></h3>
+      <p>RAG pipeline over Victron documentation — pgvector, LangChain, FastAPI.</p>
+      <div class="proj-meta"><span class="lang lang-python">Python</span><span class="tag">pgvector</span><span class="tag">rag</span><span class="org-chip">4alvit</span></div>
+    </article>
+    <article class="proj" data-tags="ai mcp control agent">
+      <h3><a href="https://github.com/4alvit/mcp-venus-os">mcp-venus-os<span class="ext">↗</span></a></h3>
+      <p>MCP server for Venus OS management — D-Bus, MQTT, and safety-constrained control for AI assistants.</p>
+      <div class="proj-meta"><span class="lang lang-python">Python</span><span class="tag">mcp</span><span class="tag">claude</span><span class="org-chip">4alvit</span></div>
+    </article>
+  </div>
+</section>
+
+<section class="group">
+  <h2>Observability<span class="count">3</span></h2>
+  <p class="desc">If you can't see it, you can't trust it with your battery.</p>
+  <div class="grid-cards">
+    <article class="proj" data-tags="observability opentelemetry tracing">
+      <h3><a href="https://github.com/victron-venus/venus-os-observability">venus-os-observability<span class="ext">↗</span></a></h3>
+      <p>OpenTelemetry/Prometheus for Venus OS — D-Bus event tracing, inverter metrics, distributed tracing to Tempo/Jaeger.</p>
+      <div class="proj-meta"><span class="lang lang-python">Python</span><span class="tag">otel</span><span class="tag">tempo</span><span class="org-chip">org</span></div>
+    </article>
+    <article class="proj" data-tags="observability mqtt opentelemetry docker">
+      <h3><a href="https://github.com/4alvit/mqtt-observability-opentelemetry">mqtt-observability-opentelemetry<span class="ext">↗</span></a></h3>
+      <p>OTel stack for any MQTT system — message interception with W3C trace context, broker metrics exporter, ready-to-run Compose.</p>
+      <div class="proj-meta"><span class="lang lang-python">Python</span><span class="tag">w3c-trace</span><span class="tag">mosquitto</span><span class="org-chip">4alvit</span></div>
+    </article>
+    <article class="proj" data-tags="observability grafana influxdb metrics">
+      <h3><a href="https://github.com/victron-venus/inverter-monitoring">inverter-monitoring<span class="ext">↗</span></a></h3>
+      <p>Telegraf + InfluxDB + Grafana monitoring stack for long-term inverter metrics.</p>
+      <div class="proj-meta"><span class="lang lang-python">Python</span><span class="tag">tig-stack</span><span class="tag">grafana</span><span class="org-chip">org</span></div>
+    </article>
+  </div>
+</section>
+
+<section class="group">
+  <h2>Gateways &amp; integration patterns<span class="count">3</span></h2>
+  <p class="desc">The glue between protocols, and the documented ways to add your own.</p>
+  <div class="grid-cards">
+    <article class="proj" data-tags="gateways mqtt https sse energy remote">
+      <h3><a href="https://github.com/victron-venus/inverter-gateway">inverter-gateway<span class="ext">↗</span></a></h3>
+      <p>Authenticated Cerbo MQTT snapshots, SSE and scoped commands over HTTPS; read-only energy reports also serve voice adapters. Designed for a companion host behind Cloudflare Access.</p>
+      <div class="proj-meta"><span class="lang lang-rust">Rust</span><span class="org-chip">org</span></div>
+    </article>
+    <article class="proj" data-tags="gateways mqtt rest websocket">
+      <h3><a href="https://github.com/4alvit/fastapi-mqtt-gateway">fastapi-mqtt-gateway<span class="ext">↗</span></a></h3>
+      <p>Production-ready REST/WebSocket → MQTT bridge with auth and topic ACLs.</p>
+      <div class="proj-meta"><span class="lang lang-python">Python</span><span class="tag">fastapi</span><span class="tag">bridge</span><span class="org-chip">4alvit</span></div>
+    </article>
+    <article class="proj" data-tags="gateways patterns reference home-assistant">
+      <h3><a href="https://github.com/victron-venus/venus-os-integration-patterns">venus-os-integration-patterns<span class="ext">↗</span></a></h3>
+      <p>Reference implementations: MQTT↔D-Bus bridges, HTTP API wrappers, scheduled control, HA automations.</p>
+      <div class="proj-meta"><span class="lang lang-python">Python</span><span class="tag">reference</span><span class="tag">ha-automation</span><span class="org-chip">org</span></div>
+    </article>
+  </div>
+</section>
+
+<section class="group">
+  <h2>Platform &amp; tooling<span class="count">11</span></h2>
+  <p class="desc">Templates, tests, CI, and infrastructure as code for the rest of the ecosystem.</p>
+  <div class="grid-cards">
+    <article class="proj" data-tags="tooling ci github-actions">
+      <h3><a href="https://github.com/victron-venus/venus-os-ci-toolkit">venus-os-ci-toolkit<span class="ext">↗</span></a></h3>
+      <p>Reusable GitHub Actions workflows: ruff, mypy, pytest, golangci-lint, govulncheck, Scorecard, auto-approve. Pinned by SHA everywhere.</p>
+      <div class="proj-meta"><span class="tag">reusable-workflows</span><span class="org-chip">org</span></div>
+    </article>
+    <article class="proj" data-tags="tooling testing ci mqtt">
+      <h3><a href="https://github.com/victron-venus/integration-tests">integration-tests<span class="ext">↗</span></a></h3>
+      <p>Cross-repo integration tests against a live MQTT broker and simulated Venus OS services.</p>
+      <div class="proj-meta"><span class="lang lang-python">Python</span><span class="tag">mqtt</span><span class="org-chip">org</span></div>
+    </article>
+    <article class="proj" data-tags="tooling template copier dbus">
+      <h3><a href="https://github.com/4alvit/dbus-service-template">dbus-service-template<span class="ext">↗</span></a></h3>
+      <p>Copier template that scaffolds a production-ready D-Bus service for Venus OS in one command.</p>
+      <div class="proj-meta"><span class="lang lang-python">Python</span><span class="tag">copier</span><span class="org-chip">4alvit</span></div>
+    </article>
+    <article class="proj" data-tags="tooling setup scripts">
+      <h3><a href="https://github.com/victron-venus/SetupHelper">SetupHelper<span class="ext">↗</span></a></h3>
+      <p>Helper scripts for Venus OS setup and configuration.</p>
+      <div class="proj-meta"><span class="tag">scripts</span><span class="org-chip">org</span></div>
+    </article>
+    <article class="proj" data-tags="tooling iot llm profile">
+      <h3><a href="https://github.com/4alvit/iot-project-builder-profile">iot-project-builder-profile<span class="ext">↗</span></a></h3>
+      <p>Automated engineering profile generator for IoT developers, based on GitHub activity.</p>
+      <div class="proj-meta"><span class="lang lang-python">Python</span><span class="tag">github-api</span><span class="org-chip">4alvit</span></div>
+    </article>
+    <article class="proj" data-tags="tooling terraform cloudflare gateway access">
+      <h3><a href="https://github.com/victron-venus/terraform-cloudflare-inverter-gateway">terraform-cloudflare-inverter-gateway<span class="ext">↗</span></a></h3>
+      <p>Reusable Cloudflare Access application, policy and service-token configuration for inverter-gateway. Import existing resources before managing them with Terraform.</p>
+      <div class="proj-meta"><span class="lang lang-hcl">HCL</span><span class="org-chip">org</span></div>
+    </article>
+    <article class="proj" data-tags="tooling terraform iac github">
+      <h3><a href="https://github.com/4alvit/terraform-github-victron">terraform-github-victron<span class="ext">↗</span></a></h3>
+      <p>Terraform IaC for the victron-venus GitHub organization — repos, settings, branch protection.</p>
+      <div class="proj-meta"><span class="lang lang-hcl">HCL</span><span class="tag">hcp-terraform</span><span class="org-chip">4alvit</span></div>
+    </article>
+    <article class="proj" data-tags="tooling terraform iac github">
+      <h3><a href="https://github.com/4alvit/terraform-github-4alvit">terraform-github-4alvit<span class="ext">↗</span></a></h3>
+      <p>Terraform IaC for the personal GitHub account infrastructure.</p>
+      <div class="proj-meta"><span class="lang lang-hcl">HCL</span><span class="tag">iac</span><span class="org-chip">4alvit</span></div>
+    </article>
+    <article class="proj" data-tags="tooling profile meta">
+      <h3><a href="https://github.com/4alvit/4alvit">4alvit/profile<span class="ext">↗</span></a></h3>
+      <p>GitHub profile README with the full ecosystem architecture diagram.</p>
+      <div class="proj-meta"><span class="tag">profile</span><span class="org-chip">4alvit</span></div>
+    </article>
+    <article class="proj" data-tags="tooling docs profile website">
+      <h3><a href="https://github.com/victron-venus/.github">.github<span class="ext">↗</span></a></h3>
+      <p>Organization profile, public project catalog, installation guides and this static website.</p>
+      <div class="proj-meta"><span class="org-chip">org</span></div>
+    </article>
+    <article class="proj" data-tags="tooling docs website">
+      <h3><a href="https://github.com/victron-venus/victron-venus.github.io">victron-venus.github.io<span class="ext">↗</span></a></h3>
+      <p>Organization website published at the root domain: landing page, project catalog and documentation guides.</p>
+      <div class="proj-meta"><span class="org-chip">org</span></div>
+    </article>
+  </div>
+</section>
+
+<section class="group">
+  <h2>Archived projects<span class="count">2</span></h2>
+  <p class="desc">Historical source and rollback references. Start new installations with the maintained replacements.</p>
+  <div class="grid-cards">
+    <article class="proj" data-tags="archived dbus ev charger">
+      <h3><a href="https://github.com/victron-venus/dbus-evcharger">dbus-evcharger<span class="ext">↗</span></a></h3>
+      <p>Archived standalone charger bridge. Maintained Mercedes vehicle and charger telemetry now lives in <a href="https://github.com/victron-venus/dbus-ev">dbus-ev</a>; follow its migration guide and never run both charger owners.</p>
+      <div class="proj-meta"><span class="org-chip">org</span></div>
+    </article>
+    <article class="proj" data-tags="archived policy">
+      <h3><a href="https://github.com/victron-venus/venus-os-governance">venus-os-governance<span class="ext">↗</span></a></h3>
+      <p>Archived policy-engine experiment. Current ESS validity, limit and watchdog checks belong to <a href="https://github.com/victron-venus/inverter-control">inverter-control</a>; this repository is not an installed control gate.</p>
+      <div class="proj-meta"><span class="org-chip">org</span></div>
+    </article>
+  </div>
+</section>
+
+<p class="empty-note">No project matches that filter. Clear the search or pick another category.</p>
+
+</main>
+
+<footer>
+  <div class="container">
+    <div class="foot-inner">
+      <div class="foot-col" style="max-width:340px">
+        <a class="brand" href="index.html">
+          <img src="/assets/img/logo.png" alt="" width="20" height="20" class="brand-logo">
+          victron-venus
+        </a>
+        <p>Open-source tooling for Victron Energy systems on Venus OS.<br>Created and maintained by <a href="https://github.com/4alvit">@4alvit</a>.</p>
+      </div>
+      <div class="foot-col">
+        <h4>Projects</h4>
+        <a href="projects.html">Full catalog</a>
+        <a href="https://github.com/victron-venus/inverter-control">inverter-control</a>
+        <a href="https://github.com/victron-venus/dbus-mqtt-battery">dbus-mqtt-battery</a>
+        <a href="https://github.com/victron-venus/venus-os-ci-toolkit">venus-os-ci-toolkit</a>
+      </div>
+      <div class="foot-col">
+        <h4>Docs</h4>
+        <a href="wiki/install.html">Install guide</a>
+        <a href="wiki/architecture.html">Architecture</a>
+        <a href="wiki/ci-standards.html">CI standards</a>
+        <a href="wiki/contributing.html">Contributing</a>
+      </div>
+      <div class="foot-col">
+        <h4>Community</h4>
+        <a href="https://github.com/victron-venus">GitHub org ↗</a>
+        <a href="https://github.com/4alvit">@4alvit ↗</a>
+        <a href="https://community.victronenergy.com">Victron community ↗</a>
+      </div>
+    </div>
+    <p class="foot-note">Independent open-source projects. Not affiliated with, endorsed by, or sponsored by
+    Victron Energy B.V. “Victron”, “Venus OS” and “Cerbo” are trademarks of Victron Energy B.V.,
+    referenced here to describe hardware compatibility. © <span data-year>2026</span>.</p>
+  </div>
+</footer>
+
+<script src="/assets/js/main.js?v=20261030g" defer></script>
+<script src="/assets/js/site.js?v=20261030g" defer></script>
+<script src="/assets/js/app.js?v=20261030g" defer></script>
+</body>
+</html>

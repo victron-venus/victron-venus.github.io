@@ -1,26 +1,129 @@
 # victron-venus.github.io
 
-Root-domain holder for the organization website. GitHub Pages only serves
-`https://<org>.github.io/` from a repository with this exact name — the real site
-lives in [`victron-venus/.github`](https://github.com/victron-venus/.github) and is
-served at **https://victron-venus.github.io/.github/**.
+Public organization site for
+[**victron-venus**](https://github.com/victron-venus), served at
+**https://victron-venus.github.io/**.
 
-This repo contains a single instant redirect (meta refresh + `location.replace`)
-so that https://victron-venus.github.io/ lands on the site.
+The site is static HTML, CSS and JavaScript with no build step, framework or
+remote fonts. It presents the ecosystem, the public project catalog and the
+guides in [`wiki/`](wiki/).
 
-To serve the site from this root directly instead: copy the contents of the
-`.github` repo's site files here (all internal URLs are relative, so they work at
-any base path), enable Pages, and drop the redirect.
+## What is here
 
-<!-- ci-release-process:start -->
+- [`index.html`](index.html) — landing page with a floating system topology,
+  ecosystem entry points, flagship projects and guide cards.
+- [`projects.html`](projects.html) — curated catalog with category filters,
+  text search and live GitHub metadata.
+- [`wiki/`](wiki/) — installation, architecture, integration, CI and
+  contribution guides, with offline search, a page outline and copy controls.
+- [`assets/css/style.css`](assets/css/style.css) — shared editorial theme and
+  light reading palette.
+- [`assets/css/elevate.css`](assets/css/elevate.css) — presentation layer:
+  floating glass navigation, atmospheric gradients, layered cards, scroll
+  reveals and view transitions.
+- [`assets/js/app.js`](assets/js/app.js) — site motion, GitHub metadata and
+  client-side page loading.
+- [`assets/js/main.js`](assets/js/main.js) — catalog filters, diagram tracing
+  and the opt-in translation UI.
+- [`assets/js/site.js`](assets/js/site.js) — documentation search, outline and
+  copy buttons.
+
+## Progressive enhancement
+
+Every page is readable and navigable without JavaScript. Navigation falls back
+to ordinary page loads. The catalog remains a complete static catalog when the
+GitHub API is unavailable.
+
+With JavaScript enabled:
+
+- internal pages are fetched and swapped in place, with the View Transitions API
+  where supported and a normal navigation fallback otherwise;
+- cards and sections reveal on scroll, project cards tilt under a mouse and the
+  system topology responds to pointer depth;
+- public repository metadata (stars, forks and last push) decorates project
+  cards from the unauthenticated GitHub API. Responses are cached in
+  `sessionStorage` for 30 minutes; the curated copy is always the fallback. The
+  unauthenticated API is rate-limited per visitor IP, so missing live metadata
+  is an expected state, not a broken page;
+- documentation search uses the local, generated
+  [`assets/search-index.json`](assets/search-index.json) and never contacts a
+  remote search service.
+
+`prefers-reduced-motion`, `prefers-reduced-transparency`, keyboard focus and
+print styles are supported. The GitHub API request and the opt-in Google
+Translate widget are the only third-party runtime requests.
+
+## Preview locally
+
+Use a loopback HTTP server; opening the files directly bypasses relative URL
+behavior:
+
+```sh
+python3 -m http.server 4173 --bind 127.0.0.1
+```
+
+Open <http://127.0.0.1:4173/>. Check the catalog filters, a guide with a hash
+link, documentation search and the narrow layout. The live GitHub metadata is
+subject to the public API rate limit.
+
+After changing guide text, heading IDs or anchors, regenerate the search index:
+
+```sh
+python3 scripts/build-search-index.py
+```
+
+CSS and JavaScript references carry a `?v=` token so GitHub Pages caches do
+not serve an older asset with new HTML. Bump the token on every page whenever
+those files change.
+
+## Validation
+
+The repository uses Python 3.12 and actionlint 1.7.12 in CI. Install the pinned
+workflow-contract parser and lint dependencies, then run the same entry point as
+CI:
+
+```sh
+python3 -m pip install --require-hashes --only-binary=:all: -r .github/requirements-workflow-contracts.txt -r .github/requirements-lint.txt
+bash scripts/ci.sh
+```
+
+`scripts/ci.sh` checks source syntax, workflow contracts, the generated search
+index and the site regression tests. The site tests verify local assets and
+navigation, stable anchors, canonical URLs, the absence of third-party script
+tags and the search index. They do not launch a browser, contact GitHub or
+publish the site.
+
+## Content rules
+
+Keep safety limits and operating constraints in the text. Never present the
+illustrative topology as live telemetry. Link only public projects; do not add
+private repository names, local settings, credentials or customer data. Keep
+existing section IDs stable so shared links continue to work.
+
 ## CI and deployment
 
-See [CI and deployment workflow](docs/release-workflow.md) for required checks and local commands. This repository uses validation-only policy; application release channels do not apply.
-<!-- ci-release-process:end -->
+See [CI and deployment workflow](docs/release-workflow.md) for required checks
+and local commands. This repository uses validation-only policy; application
+release channels do not apply.
 
-Development checks and review expectations are in [CONTRIBUTING.md](CONTRIBUTING.md); private reporting guidance is in [SECURITY.md](SECURITY.md). [OpenSSF readiness evidence](docs/openssf-evidence.md) records verified controls and outstanding owner decisions.
+Development checks and review expectations are in
+[CONTRIBUTING.md](CONTRIBUTING.md); private reporting guidance is in
+[SECURITY.md](SECURITY.md). [OpenSSF readiness evidence](docs/openssf-evidence.md)
+records verified controls and remaining assessment limits.
 
 ## License
 
-Original code, tests and documentation use the [MIT license](LICENSE).
-See [third-party notices](THIRD_PARTY_NOTICES.md) for imported helper notices and exclusions.
+Original code, tests and documentation use the [MIT license](LICENSE). The
+upstream site and project descriptions were published by the same organization
+under the same license. See [third-party notices](THIRD_PARTY_NOTICES.md) for
+imported helper notices and exclusions.
+
+## Maintenance and security evidence
+
+See [governance](GOVERNANCE.md), [Code of Conduct](CODE_OF_CONDUCT.md),
+[roadmap](ROADMAP.md), [source changes](CHANGELOG.md) and
+[quality evidence](docs/quality.md). Source revisions use complete Git
+identities; no synthetic application releases are created. Optional CLI status
+operations use the documented [transport profile](docs/transport-security.md).
+
+[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/15587/badge)](https://www.bestpractices.dev/projects/15587)

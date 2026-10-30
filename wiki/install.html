@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Install guide — Victron Venus Wiki</title>
+<meta name="description" content="Layer-by-layer install guide for the victron-venus stack: battery sensing, D-Bus services, ESS control, dashboards, and long-term monitoring.">
+<link rel="canonical" href="https://victron-venus.github.io/wiki/install.html">
+<meta name="theme-color" content="#f4f3ec">
+<link rel="icon" type="image/png" href="/assets/img/logo.png">
+<link rel="stylesheet" href="/assets/css/style.css?v=20261030g">
+<link rel="stylesheet" href="/assets/css/elevate.css?v=20261030g">
+</head>
+<body class="docs-page">
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="nav">
+  <div class="container nav-inner">
+    <a class="brand" href="../" aria-label="Victron Venus home">
+      <img src="/assets/img/logo.png" alt="" width="22" height="22" class="brand-logo">
+      victron-venus
+    </a>
+    <nav class="nav-links" aria-label="Main navigation">
+      <a href="../projects.html">Projects</a>
+      <a href="architecture.html">Architecture</a>
+      <a href="./" aria-current="page">Docs</a>
+      <a class="nav-gh" href="https://github.com/victron-venus">GitHub&nbsp;↗</a>
+    </nav>
+<details class="mobile-nav"><summary>Menu</summary><nav class="mobile-links" aria-label="Mobile navigation">
+      <a href="../projects.html">Projects</a>
+      <a href="architecture.html">Architecture</a>
+      <a href="./" aria-current="page">Docs</a>
+      <a class="nav-gh" href="https://github.com/victron-venus">GitHub&nbsp;↗</a>
+    </nav></details><details class="doc-search"><summary aria-label="Search documentation">Search ↗</summary><div class="search-panel"><label for="docs-query">Search the documentation</label><input id="docs-query" type="search" placeholder="Try MQTT, battery or install" autocomplete="off"><p class="search-status" role="status">Enter a topic to find a guide.</p><ul class="search-results"></ul><a href="../wiki/">Browse all guides →</a></div></details>
+  </div>
+</header>
+
+<main id="main" class="container section">
+<div class="wiki-layout">
+
+<details class="wiki-drawer"><summary>Guides &amp; page contents</summary><nav class="wiki-nav" aria-label="Wiki navigation">
+  <span class="wn-label">Wiki</span>
+  <a href="./">Overview</a>
+  <a href="install.html" aria-current="page">Install guide</a>
+  <a href="architecture.html">Architecture</a>
+  <a href="integration.html">Venus OS integration</a>
+  <a href="ci-standards.html">CI standards</a>
+  <a href="contributing.html">Contributing</a>
+</nav></details>
+
+<article class="prose">
+<p class="eyebrow">01 · Install</p>
+<h1>Installing on Venus OS</h1>
+<p>Use the selected repository's released installer and configuration example. These projects are independent repositories; there is no organization-wide <code>bootstrap.sh</code>.</p>
+<h2 id="section-1">Check the device first</h2>
+<pre><code>cat /opt/victronenergy/version
+python3 --version
+uname -m
+command -v svc svstat multilog</code></pre>
+<p>The September 2026 audit used Venus OS v3.75 and Python 3.12.13 on a Raspberry Pi 3 Model B with approximately 1 GB RAM. Other hardware and firmware need their own checks.</p>
+<h2 id="section-2">Native service installation</h2>
+<p>Use daemontools: persistent application and service files under <code>/data</code>, symlinks under volatile <code>/service</code>, and offline boot restoration from <code>/data/rc.local</code> before any <code>exit 0</code>. A systemd unit or an unreferenced <code>/data/rc/S99*</code> file will not install a native Venus service.</p>
+<p>Install SetupHelper when the package requires it. Preserve local configuration and venvs during updates. Check dependencies before stopping the existing service; do not run global pip upgrades or network installers at boot.</p>
+<ul>
+<li>Battery and PV bridges: follow <a href="https://github.com/victron-venus/dbus-mqtt-battery">dbus-mqtt-battery</a>, <a href="https://github.com/victron-venus/dbus-virtual-battery">dbus-virtual-battery</a>, and <a href="https://github.com/victron-venus/dbus-tasmota-pv">dbus-tasmota-pv</a>.</li>
+<li>Home Assistant bridges: <a href="https://github.com/victron-venus/dbus-emporia-vue">Emporia</a> and <a href="https://github.com/victron-venus/dbus-pump">water tank, pump and valve</a> depend on their configured HA endpoint.</li>
+<li><a href="https://github.com/victron-venus/dbus-ev">dbus-ev</a> reads Mercedes or Home Assistant vehicle telemetry; its integrated charger requires the Mercedes backend. The standalone charger repository is archived. Follow the <a href="https://github.com/victron-venus/dbus-ev/blob/main/docs/mercedes-migration.md">migration and rollback guide</a> and never run two owners of the same charger service.</li>
+<li><a href="https://github.com/victron-venus/inverter-control">inverter-control</a> uses <code>local_config.py</code>, with a preserved copy under <code>/data/setupOptions/inverter-control/</code>. Verify metering before enabling control.</li>
+<li><a href="https://github.com/victron-venus/venus-os-observability">Observability</a>: use metrics-only mode when trace export is unnecessary.</li>
+</ul>
+<h2 id="inverter-climate">Inverter Climate thermostat controls</h2>
+<p><a href="https://github.com/victron-venus/inverter-climate">inverter-climate</a> runs natively on Venus OS and uses the existing Home Assistant thermostat integration, including Google Nest. It reads local D-Bus energy data and publishes an <strong>Inverter Climate</strong> room-temperature device.</p>
+<p>In SetupHelper PackageManager, add package <code>inverter-climate</code>, GitHub user <code>victron-venus</code>, branch <code>latest</code>. This is the packaged stable release; <code>main</code> is development source. Python 3.12+, firmware D-Bus/GLib bindings and <code>velib_python</code> are required.</p>
+<p>A first installation stays disabled until configured and explicitly started. Follow the <a href="https://github.com/victron-venus/inverter-climate/blob/main/deploy/venus/README.md">native lifecycle guide</a> and <a href="https://github.com/victron-venus/inverter-climate/blob/main/examples/venus.toml">configuration example</a>. Keep HA credentials and configuration private under <code>/data/setupOptions/inverter-climate</code>; select the real thermostat and energy sources, and begin with <code>[service] mode = "observe"</code>.</p>
+<p><strong>Settings → Devices</strong> shows temperature and metadata. For manual commands, add <code>control_enabled = true</code> to the existing <code>[device]</code> section and restart the service according to the lifecycle guide. Open the <strong>Switch pane</strong> from the small icon at the upper left of GUI v2: <strong>Temperature setpoint</strong> is a slider, and <strong>Heating mode</strong> offers <strong>Heat / Off</strong>. The same controls are available through <strong>VRM Remote Console</strong>.</p>
+<p>Manual control can remain in <code>observe</code> mode. Automatic preheating requires the separate <code>mode = "active"</code> choice and a validated energy configuration. Updates preserve private settings, device identity and command journals; uncertain commands are not automatically retried. Follow the package guide for recovery.</p>
+<h2 id="section-4">Keep companion workloads off the GX</h2>
+<p>Run Docker dashboards, Grafana/Loki, databases and forecasting on a NAS/server. Flash ESPHome on the ESP32. Check architecture and resource headroom before adding optional dashboard binaries to a GX. Not every repository is a deployable native package.</p>
+<h2 id="section-5">Verify uptime, logs and D-Bus types</h2>
+<pre><code>svstat /service/dbus-mqtt-chain1 /service/dbus-mqtt-chain2
+svstat /service/dbus-ev /service/vrmlogger
+tail -n 80 /var/log/dbus-ev/current
+tail -n 80 /var/log/vrmlogger/current</code></pre>
+<p><code>svc -s</code> suspends a process; it does not show status. Never <code>cat supervise/ok</code>, which is a FIFO. Repository names and supervised instance names can differ.</p>
+<p>Verify numeric D-Bus values, <code>/Connected</code>, fresh source data and successful VRM uploads. Native MQTT topics use <code>N/&lt;portal-id&gt;/...</code>; raw sensor and application topics have their own contracts. Use the actual portal ID and the existing GX broker.</p>
+<p>On the audited device <code>/var/log</code> points to persistent <code>/data/log</code>. Bound logs with multilog and keep frequent cursors/heartbeats under <code>/run</code>. Test reboot and firmware recovery during a planned maintenance window.</p>
+<p>A connected broker or successful HTTP response does not prove fresh telemetry. Keep blocking requests outside the D-Bus main loop, preserve acquisition timestamps through queued callbacks, and expire MQTT fields independently. Freshness checks and network polling can have different intervals.</p>
+<p>The <a href="https://github.com/victron-venus/.github/blob/main/docs/VENUS-AUDIT-CLOSURE-2026-09-12.md">September audit closure</a> records the additional releases, device checks, passive meter capture and remaining physical validation limits.</p>
+<p>Read the <a href="https://github.com/victron-venus/.github/blob/main/docs/INSTALL.md">complete installation guide</a> and <a href="https://github.com/victron-venus/.github/blob/main/docs/VENUS-SERVICE-AUDIT-2026-09-12.md">service audit</a>.</p>
+</article>
+</div>
+</main>
+
+<footer>
+  <div class="container">
+    <p class="foot-note" style="margin-top:0;border:0;padding-top:0">Independent open-source projects. Not affiliated with Victron Energy B.V.
+    © <span data-year>2026</span> · <a href="https://github.com/victron-venus/.github">source of this site</a></p>
+  </div>
+</footer>
+
+<script src="/assets/js/main.js?v=20261030g" defer></script>
+<script src="/assets/js/site.js?v=20261030g" defer></script>
+<script src="/assets/js/app.js?v=20261030g" defer></script>
+</body>
+</html>
