@@ -5,18 +5,21 @@
 ### Changes
 
 Serve the organization site directly from the root GitHub Pages repository. The
-landing page, project catalog and wiki now run on a shared motion layer: floating
-glass navigation, an illustrative system constellation, scroll reveals, pointer
-depth, client-side page loading and live public GitHub metadata. The catalog and
-all guides retain their curated content and no-JavaScript fallback. The previous
-redirect and its validator are retired.
+landing page, project catalog and all wiki guides are consolidated into
+`index.html`; the top menu and guide cards link to anchored sections, and the
+legacy `projects.html` and `wiki/` URLs redirect to those anchors. The page runs
+on a shared motion layer: floating glass navigation, an illustrative system
+constellation, scroll reveals, pointer depth, per-guide outlines, offline search
+and live public GitHub metadata. All curated content and the no-JavaScript
+fallback remain. The previous redirect and its validator are retired.
 
 ### Compatibility and upgrade
 
-Existing guide anchors are preserved. Internal navigation works with ordinary
-page loads when JavaScript or the View Transitions API is unavailable. Live
-metadata is optional and rate-limited; the static catalog is authoritative.
-Regenerate `assets/search-index.json` after changing guide text.
+Existing guide anchors are preserved and old page URLs redirect to equivalent
+sections. Internal navigation works with ordinary anchor links when JavaScript
+is unavailable. Live metadata is optional and rate-limited; the static catalog
+is authoritative. Regenerate `assets/search-index.json` after changing guide
+text, heading IDs or anchors.
 
 ### Security
 

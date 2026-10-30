@@ -105,7 +105,7 @@
     }
 
     if (navigator.clipboard?.writeText) {
-      (article || scope).querySelectorAll(".prose pre").forEach((pre) => {
+      scope.querySelectorAll(".prose pre").forEach((pre) => {
         if (pre.dataset.copy) return;
         pre.dataset.copy = "1";
         const code = pre.querySelector("code");

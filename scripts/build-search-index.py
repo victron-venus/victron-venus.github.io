@@ -17,6 +17,7 @@ class Sections(HTMLParser):
         self.heading = None
         self.parts = []
         self.sections = []
+        self.section_anchor = ''
         self.title = "Documentation"
         self.current = None
 
@@ -30,12 +31,17 @@ class Sections(HTMLParser):
             self.skip += 1
         if self.skip:
             return
+        if tag == 'section' and 'id' in attrs:
+            self.section_anchor = '#' + attrs['id']
+        if self.heading and tag in ('br', 'span'):
+            self.parts.append(' ')
         if tag in ('h1', 'h2'):
             if self.current:
                 self.sections.append(self.current)
             self.heading = tag
             self.parts = []
-            self.current = {'title': '', 'url': self.url + ('#' + attrs['id'] if tag == 'h2' and 'id' in attrs else ''), 'text': ''}
+            anchor = '#' + attrs['id'] if 'id' in attrs else self.section_anchor
+            self.current = {'title': '', 'url': self.url + anchor, 'text': ''}
         elif tag in ('p', 'li', 'br', 'pre') and self.current:
             self.current['text'] += ' '
 
@@ -50,7 +56,7 @@ class Sections(HTMLParser):
             title = ' '.join(''.join(self.parts).split())
             if tag == 'h1':
                 self.title = title
-            self.current['title'] = title if tag == 'h1' else f'{self.title} · {title}'
+            self.current['title'] = title
             self.heading = None
 
     def handle_data(self, text):
@@ -71,11 +77,9 @@ class Sections(HTMLParser):
 
 
 def build(root=ROOT):
-    entries = []
-    for path in sorted((root / 'wiki').glob('*.html')):
-        parser = Sections(path.relative_to(root).as_posix())
-        parser.feed(path.read_text())
-        entries.extend(parser.result())
+    parser = Sections('/')
+    parser.feed((root / 'index.html').read_text())
+    entries = parser.result()
     return json.dumps(entries, ensure_ascii=False, indent=2) + '\n'
 
 

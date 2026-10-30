@@ -3,8 +3,9 @@
 This project contains executable website and CI code and is included in the
 public repository maintenance scope.
 
-- Purpose and content: [README](../README.md), `index.html`, `projects.html` and
-  the guides in `wiki/`.
+- Purpose and content: [README](../README.md) and the single-page `index.html`,
+  which contains the catalog and guides; `projects.html` and `wiki/` are
+  redirects to its anchors.
 - Contribution and testing instructions: [CONTRIBUTING](../CONTRIBUTING.md).
 - Confidential reporting and supported source: [SECURITY](../SECURITY.md).
 - Automated checks: `scripts/ci.sh`, site structure and search-index tests,

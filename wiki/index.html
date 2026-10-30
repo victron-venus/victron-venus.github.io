@@ -2,112 +2,13 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
 <title>Wiki — Victron Venus</title>
-<meta name="description" content="Documentation hub for the victron-venus ecosystem: install guide, architecture, Venus OS integration patterns, CI standards, and contributing workflow.">
-<link rel="canonical" href="https://victron-venus.github.io/wiki/">
-<meta name="theme-color" content="#f4f3ec">
-<link rel="icon" type="image/png" href="/assets/img/logo.png">
-<link rel="stylesheet" href="/assets/css/style.css?v=20261030g">
-<link rel="stylesheet" href="/assets/css/elevate.css?v=20261030g">
+<link rel="canonical" href="https://victron-venus.github.io/#docs">
+<meta http-equiv="refresh" content="0; url=/#docs">
+<script>location.replace("/#docs");</script>
 </head>
-<body class="docs-page">
-<a class="skip-link" href="#main">Skip to content</a>
-
-<header class="nav">
-  <div class="container nav-inner">
-    <a class="brand" href="../" aria-label="Victron Venus home">
-      <img src="/assets/img/logo.png" alt="" width="22" height="22" class="brand-logo">
-      victron-venus
-    </a>
-    <nav class="nav-links" aria-label="Main navigation">
-      <a href="../projects.html">Projects</a>
-      <a href="architecture.html">Architecture</a>
-      <a href="./" aria-current="page">Docs</a>
-      <a class="nav-gh" href="https://github.com/victron-venus">GitHub&nbsp;↗</a>
-    </nav>
-<details class="mobile-nav"><summary>Menu</summary><nav class="mobile-links" aria-label="Mobile navigation">
-      <a href="../projects.html">Projects</a>
-      <a href="architecture.html">Architecture</a>
-      <a href="./" aria-current="page">Docs</a>
-      <a class="nav-gh" href="https://github.com/victron-venus">GitHub&nbsp;↗</a>
-    </nav></details><details class="doc-search"><summary aria-label="Search documentation">Search ↗</summary><div class="search-panel"><label for="docs-query">Search the documentation</label><input id="docs-query" type="search" placeholder="Try MQTT, battery or install" autocomplete="off"><p class="search-status" role="status">Enter a topic to find a guide.</p><ul class="search-results"></ul><a href="../wiki/">Browse all guides →</a></div></details>
-  </div>
-</header>
-
-<main id="main" class="container section">
-<div class="sec-head">
-  <p class="eyebrow">Wiki</p>
-  <h1>Documentation</h1>
-  <p>Everything needed to go from a stock Cerbo GX to the full open stack — and the standards
-  that keep the codebase maintainable.</p>
-</div>
-
-<div class="prose">
-  <h2 id="section-1">Where to start</h2>
-  <ol class="step-list">
-    <li><strong>Skim the <a href="architecture.html">Architecture</a></strong> — five layers, two buses (D-Bus on-device, MQTT everywhere else). Two minutes well spent before installing anything.</li>
-    <li><strong>Follow the <a href="install.html">install guide</a></strong> for your hardware layer. Each step is independent; adopt only what you need.</li>
-    <li><strong>Dive into <a href="integration.html">Venus OS integration</a></strong> when writing your own service — service naming, MQTT topics, PackageManager installs.</li>
-    <li><strong>Before your first PR, read <a href="contributing.html">contributing</a></strong> and the <a href="ci-standards.html">CI standards</a> every repo here follows.</li>
-  </ol>
-
-  <h2 id="section-2">All pages</h2>
-  <p>Read the <a href="https://github.com/victron-venus/.github/blob/main/docs/VENUS-AUDIT-CLOSURE-2026-09-12.md">September 2026 service audit closure</a> for verified deployment fixes, meter-exchange evidence and validation limits.</p>
-  <div class="wiki-cards">
-    <a class="wcard" href="install.html"><span class="wn-num">01</span><h3>Install guide</h3><p>Layer-by-layer setup from flashing an ESP32 to a running dashboard.</p></a>
-    <a class="wcard" href="architecture.html"><span class="wn-num">02</span><h3>Architecture</h3><p>The five layers and why control data stays on D-Bus while telemetry rides MQTT.</p></a>
-    <a class="wcard" href="integration.html"><span class="wn-num">03</span><h3>Venus OS integration</h3><p>com.victronenergy.* naming, MQTT topic conventions, PackageManager.</p></a>
-    <a class="wcard" href="ci-standards.html"><span class="wn-num">04</span><h3>CI standards</h3><p>Reusable workflows, SHA pinning, release rules, version sync.</p></a>
-    <a class="wcard" href="contributing.html"><span class="wn-num">05</span><h3>Contributing</h3><p>Fork → branch → PR flow, conventional commits, local checks.</p></a>
-  </div>
-
-  <div class="callout">
-    <strong>Safety first.</strong> These projects control real inverters and batteries. Read the
-    <a href="contributing.html#gates">control-change review requirements</a> before enabling
-    automated control, and never test charge/discharge policies without a way to cut them off.
-  </div>
-</div>
-</main>
-
-<footer>
-  <div class="container">
-    <div class="foot-inner">
-      <div class="foot-col" style="max-width:340px">
-        <a class="brand" href="../">
-          <img src="/assets/img/logo.png" alt="" width="20" height="20" class="brand-logo">
-          victron-venus
-        </a>
-        <p>Open-source tooling for Victron Energy systems on Venus OS.<br>Created and maintained by <a href="https://github.com/4alvit">@4alvit</a>.</p>
-      </div>
-      <div class="foot-col">
-        <h4>Projects</h4>
-        <a href="../projects.html">Full catalog</a>
-        <a href="https://github.com/victron-venus/inverter-control">inverter-control</a>
-        <a href="https://github.com/victron-venus/dbus-mqtt-battery">dbus-mqtt-battery</a>
-      </div>
-      <div class="foot-col">
-        <h4>Docs</h4>
-        <a href="install.html">Install guide</a>
-        <a href="architecture.html">Architecture</a>
-        <a href="ci-standards.html">CI standards</a>
-        <a href="contributing.html">Contributing</a>
-      </div>
-      <div class="foot-col">
-        <h4>Community</h4>
-        <a href="https://github.com/victron-venus">GitHub org ↗</a>
-        <a href="https://github.com/4alvit">@4alvit ↗</a>
-        <a href="https://community.victronenergy.com">Victron community ↗</a>
-      </div>
-    </div>
-    <p class="foot-note">Independent open-source projects. Not affiliated with, endorsed by, or sponsored by
-    Victron Energy B.V. “Victron”, “Venus OS” and “Cerbo” are trademarks of Victron Energy B.V.,
-    referenced here to describe hardware compatibility. © <span data-year>2026</span>.</p>
-  </div>
-</footer>
-
-<script src="/assets/js/main.js?v=20261030g" defer></script>
-<script src="/assets/js/site.js?v=20261030g" defer></script>
-<script src="/assets/js/app.js?v=20261030g" defer></script>
+<body>
+<p>This page is now part of the <a href="/#docs">single-page Victron Venus site</a>.</p>
 </body>
 </html>

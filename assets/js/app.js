@@ -87,13 +87,16 @@
   function initNavState() {
     const links = $$(".nav-links a, .mobile-links a");
     const here = location.pathname.replace(/index\.html$/, "");
+    const hash = location.hash;
     const local = links
       .map((link) => ({ link, url: new URL(link.href) }))
       .filter(({ url }) => url.origin === location.origin);
-    const exact = local.find(({ url }) => url.pathname === here);
-    const docs = here.startsWith("/wiki/");
+    const scopedHash = hash.startsWith("#catalog-") ? "#projects" : hash;
     for (const { link, url } of local) {
-      const isCurrent = url.pathname === here || (!exact && docs && url.pathname === "/wiki/");
+      const samePage = url.pathname === here;
+      const isCurrent = samePage && (url.hash
+        ? scopedHash === url.hash || scopedHash.startsWith(`${url.hash}-`)
+        : !hash);
       if (isCurrent) link.setAttribute("aria-current", "page");
       else link.removeAttribute("aria-current");
     }
@@ -541,6 +544,7 @@
     window.addEventListener("popstate", () => {
       navigate(location.href, { history: "none" });
     });
+    window.addEventListener("hashchange", initNavState);
   }
 
   function boot() {

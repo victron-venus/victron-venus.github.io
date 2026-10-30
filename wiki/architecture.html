@@ -2,139 +2,24 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Architecture — Victron Venus Wiki</title>
-<meta name="description" content="The five layers of the victron-venus ecosystem: sensing, D-Bus services, control and policy, MQTT distribution, and dashboards/observability — and why the split exists.">
-<link rel="canonical" href="https://victron-venus.github.io/wiki/architecture.html">
-<meta name="theme-color" content="#f4f3ec">
-<link rel="icon" type="image/png" href="/assets/img/logo.png">
-<link rel="stylesheet" href="/assets/css/style.css?v=20261030g">
-<link rel="stylesheet" href="/assets/css/elevate.css?v=20261030g">
+<meta name="robots" content="noindex">
+<title>Architecture — Victron Venus</title>
+<link rel="canonical" href="https://victron-venus.github.io/#architecture">
+<meta http-equiv="refresh" content="0; url=/#architecture">
+<script>
+  (function () {
+    var map = {
+        "#section-1": "#architecture-section-1",
+        "#inverter-climate": "#architecture-inverter-climate",
+        "#section-3": "#architecture-section-3",
+        "#section-4": "#architecture-section-4",
+        "#section-5": "#architecture-section-5"
+    };
+    location.replace((map[location.hash] || "").replace(/^#/, "/#") || "/#architecture");
+  })();
+</script>
 </head>
-<body class="docs-page">
-<a class="skip-link" href="#main">Skip to content</a>
-
-<header class="nav">
-  <div class="container nav-inner">
-    <a class="brand" href="../" aria-label="Victron Venus home">
-      <img src="/assets/img/logo.png" alt="" width="22" height="22" class="brand-logo">
-      victron-venus
-    </a>
-    <nav class="nav-links" aria-label="Main navigation">
-      <a href="../projects.html">Projects</a>
-      <a href="architecture.html" aria-current="page">Architecture</a>
-      <a href="./">Docs</a>
-      <a class="nav-gh" href="https://github.com/victron-venus">GitHub&nbsp;↗</a>
-    </nav>
-<details class="mobile-nav"><summary>Menu</summary><nav class="mobile-links" aria-label="Mobile navigation">
-      <a href="../projects.html">Projects</a>
-      <a href="architecture.html" aria-current="page">Architecture</a>
-      <a href="./">Docs</a>
-      <a class="nav-gh" href="https://github.com/victron-venus">GitHub&nbsp;↗</a>
-    </nav></details><details class="doc-search"><summary aria-label="Search documentation">Search ↗</summary><div class="search-panel"><label for="docs-query">Search the documentation</label><input id="docs-query" type="search" placeholder="Try MQTT, battery or install" autocomplete="off"><p class="search-status" role="status">Enter a topic to find a guide.</p><ul class="search-results"></ul><a href="../wiki/">Browse all guides →</a></div></details>
-  </div>
-</header>
-
-<main id="main" class="container section">
-<div class="wiki-layout">
-
-<details class="wiki-drawer"><summary>Guides &amp; page contents</summary><nav class="wiki-nav" aria-label="Wiki navigation">
-  <span class="wn-label">Wiki</span>
-  <a href="./">Overview</a>
-  <a href="install.html">Install guide</a>
-  <a href="architecture.html" aria-current="page">Architecture</a>
-  <a href="integration.html">Venus OS integration</a>
-  <a href="ci-standards.html">CI standards</a>
-  <a href="contributing.html">Contributing</a>
-</nav></details>
-
-<article class="prose">
-<p class="eyebrow">02 · Architecture</p>
-<h1 style="font-family:var(--font-display);font-size:clamp(1.7rem,2.5vw + 0.5rem,2.4rem);margin-top:0.75rem">How the system fits together</h1>
-<p style="margin-top:0.75rem">Venus OS models devices on its local <strong>D-Bus</strong>.
-Bridges and companion applications use MQTT, HTTP or WebSockets according to
-their own integration contracts. The repository map is not a live deployment inventory.</p>
-
-<h2 id="section-1">The five layers</h2>
-
-<div class="layers">
-  <div class="layer">
-    <h3>1 · Hardware &amp; sensing</h3>
-    <p>ESP32s, Tasmota plugs, CT clamps, Emporia Vue submeters, EV chargers and water tanks/pumps provide readings through firmware or configured Home Assistant entities.
-    <a href="https://github.com/victron-venus/esphome-jbd-bms-mqtt">esphome-jbd-bms-mqtt</a><a href="https://github.com/victron-venus/dbus-esphome-grid-sensor">dbus-esphome-grid-sensor</a><a href="https://github.com/victron-venus/dbus-ev">dbus-ev</a><a href="https://github.com/victron-venus/dbus-pump">dbus-pump</a></p>
-  </div>
-  <div class="layer">
-    <h3>2 · D-Bus services</h3>
-    <p>Translators running on the GX: MQTT→D-Bus for the audited battery and Tasmota PV bridges, and Home Assistant→D-Bus for Emporia, EV, charger and pump measurements. Third-party hardware appears as Victron device services.
-    <a href="https://github.com/victron-venus/dbus-mqtt-battery">dbus-mqtt-battery</a><a href="https://github.com/victron-venus/dbus-tasmota-pv">dbus-tasmota-pv</a><a href="https://github.com/victron-venus/dbus-emporia-vue">dbus-emporia-vue</a></p>
-  </div>
-  <div class="layer">
-    <h3>3 · Control &amp; policy</h3>
-    <p>inverter-control calculates setpoints and applies its configured validity, limit and watchdog policies before D-Bus writes. It consumes EV data published by the Home Assistant bridges. The archived venus-os-governance project does not gate this deployed path, and no dbus-event-log service was running on the audited GX. These repositories must not be treated as an installed authorization or audit layer.
-    <a href="https://github.com/victron-venus/inverter-control">inverter-control</a><a href="https://github.com/victron-venus/venus-os-governance">venus-os-governance</a><a href="https://github.com/victron-venus/dbus-event-log">dbus-event-log</a><a href="https://github.com/victron-venus/dbus-ev">dbus-ev</a></p>
-  </div>
-  <div class="layer">
-    <h3>4 · MQTT distribution</h3>
-    <p>State leaves the GX over MQTT topics. fastapi-mqtt-gateway adds REST/WebSocket access for clients that can't speak MQTT natively.
-    <a href="https://github.com/4alvit/fastapi-mqtt-gateway">fastapi-mqtt-gateway</a></p>
-  </div>
-  <div class="layer">
-    <h3>5 · Consumption</h3>
-    <p>Dashboards (Go binary on-GX, Python/Docker, Vue SPA, Tauri desktop), Home Assistant, observability stacks and optional forecasting tools. Verify each configured caller before assuming forecasts affect controller decisions.
-    <a href="https://github.com/victron-venus/inverter-dashboard-go">inverter-dashboard-go</a><a href="https://github.com/4alvit/solar-forecast-langgraph">solar-forecast-langgraph</a><a href="https://github.com/victron-venus/venus-os-observability">venus-os-observability</a><a href="https://github.com/victron-venus/inverter-monitoring">inverter-monitoring</a></p>
-  </div>
-</div>
-
-<h2 id="inverter-climate">Thermostat integration</h2>
-<p><a href="https://github.com/victron-venus/inverter-climate">inverter-climate</a> spans the D-Bus and control layers. A native supervised service on Venus OS reads local system energy, publishes room temperature, and exchanges thermostat state and commands with Home Assistant. HA owns the existing Google Nest connection and authentication.</p>
-<p>The stock <strong>GUI v2 Switch pane</strong> and <strong>VRM Remote Console</strong> can show its optional temperature slider and Heat/Off selector through the Switchable Output API on the same temperature device. Observation is the default; manual controls and automatic preheating are enabled separately. HA requests run outside the D-Bus loop and the separate ESS controller.</p>
-<p>The native path needs no companion gateway or GUI patch, while Nest still relies on HA and its cloud integration. For a gas furnace, the configured heating-power estimate describes electrical demand; it does not measure heat or gas and is not published as another AC load. See the <a href="install.html#inverter-climate">installation and control guide</a>.</p>
-
-<h2 id="section-3">Why two buses instead of one</h2>
-<p>D-Bus is how Venus OS models batteries, PV inverters and grid meters as
-<code>com.victronenergy.*</code> services. The ESS controller reads and writes that local bus.</p>
-<p>Companion dashboards, Home Assistant, Grafana and forecasters use MQTT, HTTP or
-WebSockets according to their integration contracts. Thermostat commands from
-inverter-climate reach Home Assistant over its REST API, while the GX-facing
-temperature device and GUI controls use D-Bus. Validate freshness and command
-acknowledgements at each boundary.</p>
-
-<h2 id="section-4">Control path vs telemetry path</h2>
-<div class="table-scroll">
-<table>
-  <thead><tr><th></th><th>Control path (amber)</th><th>Telemetry path (cyan)</th></tr></thead>
-  <tbody>
-    <tr><td>Protocol</td><td>D-Bus for ESS; HA REST for thermostats</td><td>MQTT / REST / WebSocket</td></tr>
-    <tr><td>Writers</td><td>Configured controller and native Venus services</td><td>Per-service publishers and gateways</td></tr>
-    <tr><td>Audit</td><td>Verify actual logging; event-log is an optional integration</td><td>Configured metrics and logs</td></tr>
-    <tr><td>Timing</td><td>ESS cadence and D-Bus latency; HA/cloud latency and observed confirmation for thermostats</td><td>Source-specific freshness limits</td></tr>
-    <tr><td>Failure mode</td><td>ESS validity, hold and watchdog policy; thermostat availability and journaled uncertain outcomes</td><td>Mark unavailable inputs; stale telemetry can affect control</td></tr>
-  </tbody>
-</table>
-</div>
-
-<h2 id="section-5">Cross-cutting concerns</h2>
-<ul>
-  <li><strong>Forecasting:</strong> optional forecast consumers need a configured, tested control contract; repository availability alone does not close a control loop.</li>
-  <li><strong>AI access:</strong> mcp-venus-os provides its own validation and write-confirmation rules. Verify its deployment and transport separately from the controller.</li>
-  <li><strong>EV data path:</strong> dbus-ev publishes vehicle telemetry from Mercedes or Home Assistant and can own the Mercedes charger service. The standalone charger repository is archived. Follow the <a href="https://github.com/victron-venus/dbus-ev/blob/main/docs/mercedes-migration.md">migration guide</a>, retain a single charger owner, and preserve unavailable-value handling during source outages.</li>
-  <li><strong>Testing:</strong> broker and simulated D-Bus integration tests complement installer checks and device observation. Firmware compatibility and cold-boot recovery need target-device validation.</li>
-</ul>
-
-<p style="margin-top:2rem"><a href="integration.html">Next: writing your own service →</a></p>
-</article>
-</div>
-</main>
-
-<footer>
-  <div class="container">
-    <p class="foot-note" style="margin-top:0;border:0;padding-top:0">Independent open-source projects. Not affiliated with Victron Energy B.V.
-    © <span data-year>2026</span> · <a href="https://github.com/victron-venus/.github">source of this site</a></p>
-  </div>
-</footer>
-
-<script src="/assets/js/main.js?v=20261030g" defer></script>
-<script src="/assets/js/site.js?v=20261030g" defer></script>
-<script src="/assets/js/app.js?v=20261030g" defer></script>
+<body>
+<p>This page is now part of the <a href="/#architecture">single-page Victron Venus site</a>.</p>
 </body>
 </html>

@@ -1,167 +1,237 @@
 [
   {
-    "title": "How the system fits together",
-    "url": "wiki/architecture.html",
-    "text": "Venus OS models devices on its local D-Bus . Bridges and companion applications use MQTT, HTTP or WebSockets according to their own integration contracts. The repository map is not a live deployment inventory."
+    "title": "Know your energy. Own the control.",
+    "url": "/#top",
+    "text": "Connect the measurements. See the whole system. Build the control you need — with open tools for Victron Venus OS. Find your starting point ↗ Explore the projects — public repositories Venus OS + companion tools D-Bus · MQTT · HTTP From one sensor to a connected installation. Adopt only the parts you need. Solar PV · Tasmota D-Bus meter Battery JBD BMS · DVCC MQTT bridge Grid CT · ESP32 grid sensor Venus OS GX Open control system Monitor See the whole picture dashboards Control Validate, then enable grid-zero ESS Illustrative topology — not live telemetry. A useful first step"
   },
   {
-    "title": "How the system fits together · The five layers",
-    "url": "wiki/architecture.html#section-1",
-    "text": "1 · Hardware & sensing ESP32s, Tasmota plugs, CT clamps, Emporia Vue submeters, EV chargers and water tanks/pumps provide readings through firmware or configured Home Assistant entities. esphome-jbd-bms-mqtt dbus-esphome-grid-sensor dbus-ev dbus-pump 2 · D-Bus services Translators running on the GX: MQTT→D-Bus for the audited battery and Tasmota PV bridges, and Home Assistant→D-Bus for Emporia, EV, charger and pump measurements. Third-party hardware appears as Victron device services. dbus-mqtt-battery dbus-tasmota-pv dbus-emporia-vue 3 · Control & policy inverter-control calculates setpoints and applies its configured validity, limit and watchdog policies before D-Bus writes. It consumes EV data published by the Home Assistant bridges. The archived venus-os-governance project does not gate this deployed path, and no dbus-event-log service was running on the audited GX. These repositories must not be treated as an installed authorization or audit layer. inverter-control venus-os-governance dbus-event-log dbus-ev 4 · MQTT distribution State leaves the GX over MQTT topics. fastapi-mqtt-gateway adds REST/WebSocket access for clients that can't speak MQTT natively. fastapi-mqtt-gateway 5 · Consumption Dashboards (Go binary on-GX, Python/Docker, Vue SPA, Tauri desktop), Home Assistant, observability stacks and optional forecasting tools. Verify each configured caller before assuming forecasts affect controller decisions. inverter-dashboard-go solar-forecast-langgraph venus-os-observability inverter-monitoring"
+    "title": "What would you like to do?",
+    "url": "/#choose-path",
+    "text": "01 Connect a device Choose a sensor or service and follow its installation guide. ↗ 02 Find the right tool Browse control, dashboards, D-Bus bridges and companion apps. ↗ 03 Understand the system See what runs on the GX, what runs elsewhere, and how they connect. ↗ The bigger picture"
   },
   {
-    "title": "How the system fits together · Thermostat integration",
-    "url": "wiki/architecture.html#inverter-climate",
-    "text": "inverter-climate spans the D-Bus and control layers. A native supervised service on Venus OS reads local system energy, publishes room temperature, and exchanges thermostat state and commands with Home Assistant. HA owns the existing Google Nest connection and authentication. The stock GUI v2 Switch pane and VRM Remote Console can show its optional temperature slider and Heat/Off selector through the Switchable Output API on the same temperature device. Observation is the default; manual controls and automatic preheating are enabled separately. HA requests run outside the D-Bus loop and the separate ESS controller. The native path needs no companion gateway or GUI patch, while Nest still relies on HA and its cloud integration. For a gas furnace, the configured heating-power estimate describes electrical demand; it does not measure heat or gas and is not published as another AC load. See the installation and control guide ."
+    "title": "One installation. Many good connections.",
+    "url": "/#system-heading",
+    "text": "Measurements enter through dedicated bridges. Local control stays on Venus OS. Dashboards and companion services help you understand what happens next. PV meter · Tasmota dbus-tasmota-pv JBD BMS · ESPHome BLE proxy → dbus-mqtt-battery Grid CT sensor dbus-esphome-grid-sensor Emporia Vue meters dbus-emporia-vue · AC loads CERBO GX · VENUS OS inverter-control — grid-zero ESS inverter-control — validity & limits dbus-event-log — optional diagnostics com.victronenergy.* services MQTT fastapi-mqtt-gateway Dashboards go · vue · desktop Home Assistant integration-patterns Observability OTel · Prometheus · Grafana Solar forecast solar-forecast-langgraph power & measurement data & control hover a block to trace its paths Public project catalog Venus OS and companion-host tools Python · Go · Vue · ESPHome Public source and project documentation Flagship"
   },
   {
-    "title": "How the system fits together · Why two buses instead of one",
-    "url": "wiki/architecture.html#section-3",
-    "text": "D-Bus is how Venus OS models batteries, PV inverters and grid meters as com.victronenergy.* services. The ESS controller reads and writes that local bus. Companion dashboards, Home Assistant, Grafana and forecasters use MQTT, HTTP or WebSockets according to their integration contracts. Thermostat commands from inverter-climate reach Home Assistant over its REST API, while the GX-facing temperature device and GUI controls use D-Bus. Validate freshness and command acknowledgements at each boundary."
+    "title": "Small tools. Purposeful building blocks.",
+    "url": "/#featured",
+    "text": "These projects cover control, telemetry, interfaces and development tooling. Deployment and device verification vary by component; see the documented evidence and remaining checks . inverter-control ↗ Grid-zero feed-in control for Victron inverters. Reads configured Venus D-Bus measurements and applies validated ESS setpoints; dashboards are separate clients. Python ess grid-zero org dbus-mqtt-battery ↗ Bridges JBD BMS batteries published over MQTT onto Venus OS D-Bus, with full DVCC support. No-BMS chains get dbus-virtual-battery. Python battery dvcc org inverter-dashboard-go ↗ Real-time web dashboard as a single Go binary that runs directly on the Cerbo. Same role as inverter-dashboard, zero Docker. Go real-time websocket org solar-forecast-langgraph ↗ LangGraph workflow that forecasts generation from OpenMeteo weather and historical inverter data. Live control requires a separately configured and tested consumer. Python langgraph openmeteo 4alvit mcp-venus-os ↗ Companion MCP server for configured Venus OS D-Bus and MQTT access. Write access depends on the enabled tools, permissions and deployed device policy. Python mcp ai 4alvit venus-os-ci-toolkit ↗ Reusable GitHub Actions workflows for adopting projects: lint, test, coverage, govulncheck and Scorecard — pinned by commit SHA. ci actions org All projects → Wiki"
   },
   {
-    "title": "How the system fits together · Control path vs telemetry path",
-    "url": "wiki/architecture.html#section-4",
-    "text": "Control path (amber) Telemetry path (cyan) Protocol D-Bus for ESS; HA REST for thermostats MQTT / REST / WebSocket Writers Configured controller and native Venus services Per-service publishers and gateways Audit Verify actual logging; event-log is an optional integration Configured metrics and logs Timing ESS cadence and D-Bus latency; HA/cloud latency and observed confirmation for thermostats Source-specific freshness limits Failure mode ESS validity, hold and watchdog policy; thermostat availability and journaled uncertain outcomes Mark unavailable inputs; stale telemetry can affect control"
+    "title": "A guide for every next step.",
+    "url": "/#docs-heading",
+    "text": "Start with your hardware and the role you need. Each guide explains the connections, installation steps and checks before enabling control. 01 Install guide Layer-by-layer setup, from flashing an ESP32 to a running dashboard. 02 Architecture The five layers, what talks D-Bus vs MQTT, and why the split. 03 Venus OS integration D-Bus service names, MQTT topic conventions, PackageManager installs. 04 CI standards Reusable workflows, SHA pinning, releases, version sync rules. 05 Contributing Fork → branch → PR flow, conventional commits, local checks. Catalog"
   },
   {
-    "title": "How the system fits together · Cross-cutting concerns",
-    "url": "wiki/architecture.html#section-5",
-    "text": "Forecasting: optional forecast consumers need a configured, tested control contract; repository availability alone does not close a control loop. AI access: mcp-venus-os provides its own validation and write-confirmation rules. Verify its deployment and transport separately from the controller. EV data path: dbus-ev publishes vehicle telemetry from Mercedes or Home Assistant and can own the Mercedes charger service. The standalone charger repository is archived. Follow the migration guide , retain a single charger owner, and preserve unavailable-value handling during source outages. Testing: broker and simulated D-Bus integration tests complement installer checks and device observation. Firmware compatibility and cold-boot recovery need target-device validation. Next: writing your own service →"
+    "title": "Public project catalog",
+    "url": "/#projects-heading",
+    "text": "Public repositories across the victron-venus organization and the @4alvit account. Filter by layer or search by name. Archived projects are separated below; each maintained repository documents its own deployment requirements. The deployment evidence index separates released code, observed runtime behavior and physical acceptance. Cards show live GitHub activity when the public API is reachable. Curated project catalog Filter projects by category all d-bus services sensing & firmware control & policy dashboards voice & displays forecast & ai observability gateways archived platform & tooling Search projects"
   },
   {
-    "title": "How every repo ships",
-    "url": "wiki/ci-standards.html",
-    "text": "The venus-os-ci-toolkit provides shared workflows and release tooling. Each project defines its own validation commands and artifact requirements; follow its checked-in contribution and release guides."
+    "title": "Venus OS D-Bus services 8",
+    "url": "/#catalog-dbus",
+    "text": "Bridges for native com.victronenergy.* services and optional D-Bus diagnostics. Follow each package’s installation guide before deploying to a GX. dbus-mqtt-battery ↗ MQTT → D-Bus bridge for JBD BMS batteries on Venus OS, with DVCC support. Python battery dvcc org dbus-tasmota-pv ↗ Tasmota power meter → D-Bus PV inverter bridge. Turns a smart plug into a PV meter. Python pv-inverter tasmota org dbus-esphome-grid-sensor ↗ ESP32 CT sensor for grid power monitoring, exposed as a D-Bus service on Venus OS. Python esp32 grid org dbus-emporia-vue ↗ Emporia Vue submeter channels as individual D-Bus AC loads, fed by Home Assistant WebSocket power data. Python submetering acload org dbus-virtual-battery ↗ Derived battery measurements for chains without a BMS. Consumes the MQTT battery driver’s freshness contract; does not establish physical BMS permission. Python derived-telemetry org dbus-ev ↗ Vehicle telemetry from Mercedes or Home Assistant, plus optional integrated Mercedes charger telemetry. Read the migration guide before replacing the archived standalone charger. Python org dbus-pump ↗ Home Assistant water tank, pump and valve data exposed as native Venus services, with the water automation and command path owned by this bridge. Python org dbus-event-log ↗ Optional D-Bus event recorder with SQLite/TimescaleDB, MQTT and CLI tools. Method capture requires explicit bus permissions; it is not a lossless audit or a native SetupHelper package. Python audit-log timescaledb org"
   },
   {
-    "title": "How every repo ships · Reusable workflows and tools",
-    "url": "wiki/ci-standards.html#section-1",
-    "text": "Workflow or tool Purpose python-ci.yml ruff lint · mypy · pytest · coverage gate → Codecov go-ci.yml golangci-lint · govulncheck · tests · coverage gate → Codecov tools/scorecard-scan Validates Scorecard results and writes SARIF; the calling workflow handles upload auto-approve-reusable.yml Metadata-only approval for eligible pull requests under the configured author and reviewer policy Consuming a toolkit workflow — always pinned to a full commit SHA: jobs: test: uses: victron-venus/venus-os-ci-toolkit/.github/workflows/python-ci.yml@875762362bb31b4899bf02fdf9e835188dc5eb80"
+    "title": "Sensing & firmware 2",
+    "url": "/#catalog-sensing",
+    "text": "ESP32 firmware and reference patterns for the hardware side of the stack. esphome-jbd-bms-mqtt ↗ ESP32 Bluetooth proxy for JBD BMS batteries, publishing cell voltages and SOC to MQTT. ESPHome ble jbd-bms org esphome-ble-sensor-patterns ↗ Production-ready ESPHome patterns for BLE sensors — iBeacon, Eddystone, custom services, passive scanning, HA integration. ibeacon xiaomi reference 4alvit"
   },
   {
-    "title": "How every repo ships · Non-negotiable rules",
-    "url": "wiki/ci-standards.html#section-2",
-    "text": "Pin everything. Every uses: in every workflow resolves to a full commit SHA — never a tag or branch. Tags move; SHAs don't. This is the supply-chain boundary. Harden runners. Workflows include step-security/harden-runner to audit egress network calls. Never push to the default branch. Feature branch from the default branch, open a PR, let CI and CodeQL pass, merge via review. Eligible, non-draft PRs receive auto-approval independently of labels. The automerge label enables automatic merging after required checks and review requirements are satisfied. Conventional Commits. feat: , fix: , docs: , chore: — release tooling parses them. Approval and merge are separate. Follow the approval caller example and merge policy guide . Keep approval jobs metadata-only and preserve the documented eligibility checks."
+    "title": "Control & policy 2",
+    "url": "/#catalog-control",
+    "text": "Inverter control and independently enabled thermostat coordination. inverter-control ↗ Grid-zero feed-in control with Home Assistant integration and web dashboard. The core ESS brain of the stack. Python ess quattro org inverter-climate ↗ Native Venus OS thermostat integration via Home Assistant and Google Nest. Publishes room temperature and optional setpoint and Heat/Off controls in the stock GUI v2 Switch pane and VRM Remote Console. Energy-aware preheating is enabled separately; observation is the default. Python thermostat SetupHelper org"
   },
   {
-    "title": "How every repo ships · Releases",
-    "url": "wiki/ci-standards.html#section-3",
-    "text": "Application repositories use their .release-policy.json , RELEASING.md and docs/release-workflow.md to define checks, artifacts and release channels. The release pipeline creates immutable beta and RC candidates. Stable promotion requires approval and copies the verified, tested RC bytes without rebuilding. A GitHub release does not deploy production; container registry publication and deployment are separate operations. Use the target repository's release commands. Do not create release tags by hand or restore the retired direct-tag publication workflow. Infrastructure and community repositories run validation and explicit deployment instead of application release channels. See the organization release overview ."
+    "title": "Dashboards & clients 5",
+    "url": "/#catalog-dashboards",
+    "text": "Web, native and read-only public clients. Pick by deployment target. inverter-dashboard-go ↗ Real-time dashboard as a single Go binary — runs directly on the Cerbo GX, optional direct Home Assistant control. Go websocket cerbo org inverter-dashboard ↗ The original Python dashboard, shipped as Docker image alvit/inverter-dashboard for NAS deployments. Python docker org inverter-dashboard-vue ↗ Shared Vue 3 SPA and reusable UI component library for the Go, Python and desktop dashboards. Vue spa ui-library org inverter-desktop ↗ Tauri desktop client wrapping the Vue dashboard, with native installers per release. Vue tauri org inverter-web-vitrine ↗ Read-only public status page backed by inverter-gateway through an authenticated server-side proxy. Access credentials stay off the browser. org"
   },
   {
-    "title": "How every repo ships · Version synchronization",
-    "url": "wiki/ci-standards.html#section-4",
-    "text": "Review base-version changes through a pull request. The target repository's release policy declares which version files must agree; projects do not all use the same file names or package format. Release tooling allocates candidate versions, applies declared build-time version overlays and records the source revision and artifact checksums. Follow that repository's versioning guide rather than manually changing a version and pushing a tag. Why so strict? These repos control physical hardware. A moved tag or an unreviewed workflow edit is not a cosmetic risk — treat CI config with the same care as control code. Next: contributing a change →"
+    "title": "Voice & displays 2",
+    "url": "/#catalog-voice",
+    "text": "Read-only reports from inverter-gateway. Energy statistics and freshness remain owned by the gateway; these adapters handle presentation. amazon-echo-home-voice ↗ Alexa custom skill backend for energy speech and screen cards. Uses authenticated gateway reports; developer setup, certification and physical device acceptance are separate steps. Python 4alvit google-home-voice-stats ↗ Standalone Cast video and speech reports using the gateway’s read-only energy API. Optional Home Assistant/Matter triggers add a voice entry point; Cast alone does not add voice commands. Python 4alvit"
   },
   {
-    "title": "Making your first change",
-    "url": "wiki/contributing.html",
-    "text": "Start with the target repository's contribution guide. Keep each pull request focused so reviewers can assess its behavior and validation."
+    "title": "Forecasting & AI 3",
+    "url": "/#catalog-ai",
+    "text": "Weather in, decisions out — plus an AI gateway into the whole system. solar-forecast-langgraph ↗ LangGraph solar forecasts from weather and historical generation. Connecting a forecast to live control requires a configured and tested consumer. Python openmeteo arima 4alvit energy-data-rag-pipeline ↗ RAG pipeline over Victron documentation — pgvector, LangChain, FastAPI. Python pgvector rag 4alvit mcp-venus-os ↗ MCP server for Venus OS management — D-Bus, MQTT, and safety-constrained control for AI assistants. Python mcp claude 4alvit"
   },
   {
-    "title": "Making your first change · The flow",
-    "url": "wiki/contributing.html#section-1",
-    "text": "Fork the target repository — or branch within the org if you're a maintainer. Create a feature branch from the target repository's default branch. One concern per branch. Make the change with tests where applicable. Bug fixes come with a regression test. Commit with Conventional Commits: feat: , fix: , docs: , chore: , refactor: , test: . Open a pull request. Describe what changes and why; link issues. CI and CodeQL must pass before merge. Address review feedback. Signed commits may be required on protected branches."
+    "title": "Observability 3",
+    "url": "/#catalog-observability",
+    "text": "If you can't see it, you can't trust it with your battery. venus-os-observability ↗ OpenTelemetry/Prometheus for Venus OS — D-Bus event tracing, inverter metrics, distributed tracing to Tempo/Jaeger. Python otel tempo org mqtt-observability-opentelemetry ↗ OTel stack for any MQTT system — message interception with W3C trace context, broker metrics exporter, ready-to-run Compose. Python w3c-trace mosquitto 4alvit inverter-monitoring ↗ Telegraf + InfluxDB + Grafana monitoring stack for long-term inverter metrics. Python tig-stack grafana org"
   },
   {
-    "title": "Making your first change · Local checks before pushing",
-    "url": "wiki/contributing.html#section-2",
-    "text": "Read the target repository's CONTRIBUTING.md and use its documented local validation command. Toolchains, lint rules and test package names differ between projects. If a repository provides scripts/ci.sh , inspect that script and install its documented prerequisites before running it: bash scripts/ci.sh Where the contribution guide also requires pre-commit, run the checked-in configuration and review any automatic changes: python3 -m pre_commit run --all-files Report the exact checks run and any limitations in the pull request. Offline checks do not establish physical-device behavior; installation and hardware acceptance are separate steps. See the website contribution guide for this site's own validation requirements."
+    "title": "Gateways & integration patterns 3",
+    "url": "/#catalog-gateways",
+    "text": "The glue between protocols, and the documented ways to add your own. inverter-gateway ↗ Authenticated Cerbo MQTT snapshots, SSE and scoped commands over HTTPS; read-only energy reports also serve voice adapters. Designed for a companion host behind Cloudflare Access. Rust org fastapi-mqtt-gateway ↗ Production-ready REST/WebSocket → MQTT bridge with auth and topic ACLs. Python fastapi bridge 4alvit venus-os-integration-patterns ↗ Reference implementations: MQTT↔D-Bus bridges, HTTP API wrappers, scheduled control, HA automations. Python reference ha-automation org"
   },
   {
-    "title": "Making your first change · Approval gates for control code",
-    "url": "wiki/contributing.html#gates",
-    "text": "Changes touching the write path — anything that ends up commanding an inverter or battery — get extra scrutiny by design: New setpoints or policy rules must preserve the deployed controller's source-validity, limit and watchdog checks and verify D-Bus write acknowledgements. The archived governance project is not an installed gate. Document the command's actual logging and verification path. Do not claim mandatory event-log coverage when that service is not deployed. Default-off. Risky behavior ships disabled until configuration explicitly enables it."
+    "title": "Platform & tooling 11",
+    "url": "/#catalog-tooling",
+    "text": "Templates, tests, CI, and infrastructure as code for the rest of the ecosystem. venus-os-ci-toolkit ↗ Reusable GitHub Actions workflows: ruff, mypy, pytest, golangci-lint, govulncheck, Scorecard, auto-approve. Pinned by SHA everywhere. reusable-workflows org integration-tests ↗ Cross-repo integration tests against a live MQTT broker and simulated Venus OS services. Python mqtt org dbus-service-template ↗ Copier template that scaffolds a production-ready D-Bus service for Venus OS in one command. Python copier 4alvit SetupHelper ↗ Helper scripts for Venus OS setup and configuration. scripts org iot-project-builder-profile ↗ Automated engineering profile generator for IoT developers, based on GitHub activity. Python github-api 4alvit terraform-cloudflare-inverter-gateway ↗ Reusable Cloudflare Access application, policy and service-token configuration for inverter-gateway. Import existing resources before managing them with Terraform. HCL org terraform-github-victron ↗ Terraform IaC for the victron-venus GitHub organization — repos, settings, branch protection. HCL hcp-terraform 4alvit terraform-github-4alvit ↗ Terraform IaC for the personal GitHub account infrastructure. HCL iac 4alvit 4alvit/profile ↗ GitHub profile README with the full ecosystem architecture diagram. profile 4alvit .github ↗ Organization profile, public project catalog, installation guides and this static website. org victron-venus.github.io ↗ Organization website published at the root domain: landing page, project catalog and documentation guides. org"
   },
   {
-    "title": "Making your first change · Where to ask",
-    "url": "wiki/contributing.html#section-4",
-    "text": "Bug or feature? Open an issue on the repo using the issue templates — they route to the right maintainers. Questions about Venus OS integration patterns start in integration-patterns discussions or the Victron community forum . Related: CI standards →"
-  },
-  {
-    "title": "Documentation",
-    "url": "wiki/index.html",
-    "text": "Everything needed to go from a stock Cerbo GX to the full open stack — and the standards that keep the codebase maintainable."
-  },
-  {
-    "title": "Documentation · Where to start",
-    "url": "wiki/index.html#section-1",
-    "text": "Skim the Architecture — five layers, two buses (D-Bus on-device, MQTT everywhere else). Two minutes well spent before installing anything. Follow the install guide for your hardware layer. Each step is independent; adopt only what you need. Dive into Venus OS integration when writing your own service — service naming, MQTT topics, PackageManager installs. Before your first PR, read contributing and the CI standards every repo here follows."
-  },
-  {
-    "title": "Documentation · All pages",
-    "url": "wiki/index.html#section-2",
-    "text": "Read the September 2026 service audit closure for verified deployment fixes, meter-exchange evidence and validation limits. 01 Install guide Layer-by-layer setup from flashing an ESP32 to a running dashboard. 02 Architecture The five layers and why control data stays on D-Bus while telemetry rides MQTT. 03 Venus OS integration com.victronenergy.* naming, MQTT topic conventions, PackageManager. 04 CI standards Reusable workflows, SHA pinning, release rules, version sync. 05 Contributing Fork → branch → PR flow, conventional commits, local checks. Safety first. These projects control real inverters and batteries. Read the control-change review requirements before enabling automated control, and never test charge/discharge policies without a way to cut them off."
+    "title": "Archived projects 2",
+    "url": "/#catalog-archived",
+    "text": "Historical source and rollback references. Start new installations with the maintained replacements. dbus-evcharger ↗ Archived standalone charger bridge. Maintained Mercedes vehicle and charger telemetry now lives in dbus-ev ; follow its migration guide and never run both charger owners. org venus-os-governance ↗ Archived policy-engine experiment. Current ESS validity, limit and watchdog checks belong to inverter-control ; this repository is not an installed control gate. org No project matches that filter. Clear the search or pick another category. On this page Back to top ↑ 01 · Install"
   },
   {
     "title": "Installing on Venus OS",
-    "url": "wiki/install.html",
+    "url": "/#install-heading",
     "text": "Use the selected repository's released installer and configuration example. These projects are independent repositories; there is no organization-wide bootstrap.sh ."
   },
   {
-    "title": "Installing on Venus OS · Check the device first",
-    "url": "wiki/install.html#section-1",
+    "title": "Check the device first",
+    "url": "/#install-section-1",
     "text": "cat /opt/victronenergy/version python3 --version uname -m command -v svc svstat multilog The September 2026 audit used Venus OS v3.75 and Python 3.12.13 on a Raspberry Pi 3 Model B with approximately 1 GB RAM. Other hardware and firmware need their own checks."
   },
   {
-    "title": "Installing on Venus OS · Native service installation",
-    "url": "wiki/install.html#section-2",
+    "title": "Native service installation",
+    "url": "/#install-section-2",
     "text": "Use daemontools: persistent application and service files under /data , symlinks under volatile /service , and offline boot restoration from /data/rc.local before any exit 0 . A systemd unit or an unreferenced /data/rc/S99* file will not install a native Venus service. Install SetupHelper when the package requires it. Preserve local configuration and venvs during updates. Check dependencies before stopping the existing service; do not run global pip upgrades or network installers at boot. Battery and PV bridges: follow dbus-mqtt-battery , dbus-virtual-battery , and dbus-tasmota-pv . Home Assistant bridges: Emporia and water tank, pump and valve depend on their configured HA endpoint. dbus-ev reads Mercedes or Home Assistant vehicle telemetry; its integrated charger requires the Mercedes backend. The standalone charger repository is archived. Follow the migration and rollback guide and never run two owners of the same charger service. inverter-control uses local_config.py , with a preserved copy under /data/setupOptions/inverter-control/ . Verify metering before enabling control. Observability : use metrics-only mode when trace export is unnecessary."
   },
   {
-    "title": "Installing on Venus OS · Inverter Climate thermostat controls",
-    "url": "wiki/install.html#inverter-climate",
+    "title": "Inverter Climate thermostat controls",
+    "url": "/#install-inverter-climate",
     "text": "inverter-climate runs natively on Venus OS and uses the existing Home Assistant thermostat integration, including Google Nest. It reads local D-Bus energy data and publishes an Inverter Climate room-temperature device. In SetupHelper PackageManager, add package inverter-climate , GitHub user victron-venus , branch latest . This is the packaged stable release; main is development source. Python 3.12+, firmware D-Bus/GLib bindings and velib_python are required. A first installation stays disabled until configured and explicitly started. Follow the native lifecycle guide and configuration example . Keep HA credentials and configuration private under /data/setupOptions/inverter-climate ; select the real thermostat and energy sources, and begin with [service] mode = \"observe\" . Settings → Devices shows temperature and metadata. For manual commands, add control_enabled = true to the existing [device] section and restart the service according to the lifecycle guide. Open the Switch pane from the small icon at the upper left of GUI v2: Temperature setpoint is a slider, and Heating mode offers Heat / Off . The same controls are available through VRM Remote Console . Manual control can remain in observe mode. Automatic preheating requires the separate mode = \"active\" choice and a validated energy configuration. Updates preserve private settings, device identity and command journals; uncertain commands are not automatically retried. Follow the package guide for recovery."
   },
   {
-    "title": "Installing on Venus OS · Keep companion workloads off the GX",
-    "url": "wiki/install.html#section-4",
+    "title": "Keep companion workloads off the GX",
+    "url": "/#install-section-4",
     "text": "Run Docker dashboards, Grafana/Loki, databases and forecasting on a NAS/server. Flash ESPHome on the ESP32. Check architecture and resource headroom before adding optional dashboard binaries to a GX. Not every repository is a deployable native package."
   },
   {
-    "title": "Installing on Venus OS · Verify uptime, logs and D-Bus types",
-    "url": "wiki/install.html#section-5",
-    "text": "svstat /service/dbus-mqtt-chain1 /service/dbus-mqtt-chain2 svstat /service/dbus-ev /service/vrmlogger tail -n 80 /var/log/dbus-ev/current tail -n 80 /var/log/vrmlogger/current svc -s suspends a process; it does not show status. Never cat supervise/ok , which is a FIFO. Repository names and supervised instance names can differ. Verify numeric D-Bus values, /Connected , fresh source data and successful VRM uploads. Native MQTT topics use N/<portal-id>/... ; raw sensor and application topics have their own contracts. Use the actual portal ID and the existing GX broker. On the audited device /var/log points to persistent /data/log . Bound logs with multilog and keep frequent cursors/heartbeats under /run . Test reboot and firmware recovery during a planned maintenance window. A connected broker or successful HTTP response does not prove fresh telemetry. Keep blocking requests outside the D-Bus main loop, preserve acquisition timestamps through queued callbacks, and expire MQTT fields independently. Freshness checks and network polling can have different intervals. The September audit closure records the additional releases, device checks, passive meter capture and remaining physical validation limits. Read the complete installation guide and service audit ."
+    "title": "Verify uptime, logs and D-Bus types",
+    "url": "/#install-section-5",
+    "text": "svstat /service/dbus-mqtt-chain1 /service/dbus-mqtt-chain2 svstat /service/dbus-ev /service/vrmlogger tail -n 80 /var/log/dbus-ev/current tail -n 80 /var/log/vrmlogger/current svc -s suspends a process; it does not show status. Never cat supervise/ok , which is a FIFO. Repository names and supervised instance names can differ. Verify numeric D-Bus values, /Connected , fresh source data and successful VRM uploads. Native MQTT topics use N/<portal-id>/... ; raw sensor and application topics have their own contracts. Use the actual portal ID and the existing GX broker. On the audited device /var/log points to persistent /data/log . Bound logs with multilog and keep frequent cursors/heartbeats under /run . Test reboot and firmware recovery during a planned maintenance window. A connected broker or successful HTTP response does not prove fresh telemetry. Keep blocking requests outside the D-Bus main loop, preserve acquisition timestamps through queued callbacks, and expire MQTT fields independently. Freshness checks and network polling can have different intervals. The September audit closure records the additional releases, device checks, passive meter capture and remaining physical validation limits. Read the complete installation guide and service audit . On this page Back to top ↑ 02 · Architecture"
+  },
+  {
+    "title": "How the system fits together",
+    "url": "/#architecture-heading",
+    "text": "Venus OS models devices on its local D-Bus . Bridges and companion applications use MQTT, HTTP or WebSockets according to their own integration contracts. The repository map is not a live deployment inventory."
+  },
+  {
+    "title": "The five layers",
+    "url": "/#architecture-section-1",
+    "text": "1 · Hardware & sensing ESP32s, Tasmota plugs, CT clamps, Emporia Vue submeters, EV chargers and water tanks/pumps provide readings through firmware or configured Home Assistant entities. esphome-jbd-bms-mqtt dbus-esphome-grid-sensor dbus-ev dbus-pump 2 · D-Bus services Translators running on the GX: MQTT→D-Bus for the audited battery and Tasmota PV bridges, and Home Assistant→D-Bus for Emporia, EV, charger and pump measurements. Third-party hardware appears as Victron device services. dbus-mqtt-battery dbus-tasmota-pv dbus-emporia-vue 3 · Control & policy inverter-control calculates setpoints and applies its configured validity, limit and watchdog policies before D-Bus writes. It consumes EV data published by the Home Assistant bridges. The archived venus-os-governance project does not gate this deployed path, and no dbus-event-log service was running on the audited GX. These repositories must not be treated as an installed authorization or audit layer. inverter-control venus-os-governance dbus-event-log dbus-ev 4 · MQTT distribution State leaves the GX over MQTT topics. fastapi-mqtt-gateway adds REST/WebSocket access for clients that can't speak MQTT natively. fastapi-mqtt-gateway 5 · Consumption Dashboards (Go binary on-GX, Python/Docker, Vue SPA, Tauri desktop), Home Assistant, observability stacks and optional forecasting tools. Verify each configured caller before assuming forecasts affect controller decisions. inverter-dashboard-go solar-forecast-langgraph venus-os-observability inverter-monitoring"
+  },
+  {
+    "title": "Thermostat integration",
+    "url": "/#architecture-inverter-climate",
+    "text": "inverter-climate spans the D-Bus and control layers. A native supervised service on Venus OS reads local system energy, publishes room temperature, and exchanges thermostat state and commands with Home Assistant. HA owns the existing Google Nest connection and authentication. The stock GUI v2 Switch pane and VRM Remote Console can show its optional temperature slider and Heat/Off selector through the Switchable Output API on the same temperature device. Observation is the default; manual controls and automatic preheating are enabled separately. HA requests run outside the D-Bus loop and the separate ESS controller. The native path needs no companion gateway or GUI patch, while Nest still relies on HA and its cloud integration. For a gas furnace, the configured heating-power estimate describes electrical demand; it does not measure heat or gas and is not published as another AC load. See the installation and control guide ."
+  },
+  {
+    "title": "Why two buses instead of one",
+    "url": "/#architecture-section-3",
+    "text": "D-Bus is how Venus OS models batteries, PV inverters and grid meters as com.victronenergy.* services. The ESS controller reads and writes that local bus. Companion dashboards, Home Assistant, Grafana and forecasters use MQTT, HTTP or WebSockets according to their integration contracts. Thermostat commands from inverter-climate reach Home Assistant over its REST API, while the GX-facing temperature device and GUI controls use D-Bus. Validate freshness and command acknowledgements at each boundary."
+  },
+  {
+    "title": "Control path vs telemetry path",
+    "url": "/#architecture-section-4",
+    "text": "Control path (amber) Telemetry path (cyan) Protocol D-Bus for ESS; HA REST for thermostats MQTT / REST / WebSocket Writers Configured controller and native Venus services Per-service publishers and gateways Audit Verify actual logging; event-log is an optional integration Configured metrics and logs Timing ESS cadence and D-Bus latency; HA/cloud latency and observed confirmation for thermostats Source-specific freshness limits Failure mode ESS validity, hold and watchdog policy; thermostat availability and journaled uncertain outcomes Mark unavailable inputs; stale telemetry can affect control"
+  },
+  {
+    "title": "Cross-cutting concerns",
+    "url": "/#architecture-section-5",
+    "text": "Forecasting: optional forecast consumers need a configured, tested control contract; repository availability alone does not close a control loop. AI access: mcp-venus-os provides its own validation and write-confirmation rules. Verify its deployment and transport separately from the controller. EV data path: dbus-ev publishes vehicle telemetry from Mercedes or Home Assistant and can own the Mercedes charger service. The standalone charger repository is archived. Follow the migration guide , retain a single charger owner, and preserve unavailable-value handling during source outages. Testing: broker and simulated D-Bus integration tests complement installer checks and device observation. Firmware compatibility and cold-boot recovery need target-device validation. Next: writing your own service → On this page Back to top ↑ 03 · Integration"
   },
   {
     "title": "Writing for Venus OS",
-    "url": "wiki/integration.html",
+    "url": "/#integration-heading",
     "text": "Conventions shared by every service in this ecosystem. Follow them and validate service discovery, numeric path types, freshness and resource use against the target firmware."
   },
   {
-    "title": "Writing for Venus OS · D-Bus service naming",
-    "url": "wiki/integration.html#section-1",
+    "title": "D-Bus service naming",
+    "url": "/#integration-section-1",
     "text": "Venus OS discovers services by their bus name. The pattern: com.victronenergy.<type>.<suffix> com.victronenergy.battery.jbd_mqtt # dbus-mqtt-battery com.victronenergy.pvinverter.tasmota # dbus-tasmota-pv com.victronenergy.grid.esphome_ct # dbus-esphome-grid-sensor com.victronenergy.acload.emporia_vue_1 # dbus-emporia-vue, one per channel com.victronenergy.temperature.inverter_climate_<identity> # inverter-climate Pick <type> from what Venus OS already understands — battery , pvinverter , grid , acload , solarcharger , temperature . A wrong type means the GX ignores your service no matter how correct the paths are."
   },
   {
-    "title": "Writing for Venus OS · Paths every service should publish",
-    "url": "wiki/integration.html#section-2",
+    "title": "Paths every service should publish",
+    "url": "/#integration-section-2",
     "text": "Path Meaning /ProductId, /ProductName Identity shown in the device list /Connected Source availability; report 0 when required inputs are unavailable /Status or /ErrorCode Fault visibility without opening logs Type-specific values e.g. /Dc/0/Voltage, /Ac/Power, /Soc"
   },
   {
-    "title": "Writing for Venus OS · Native thermostat controls",
-    "url": "wiki/integration.html#section-3",
+    "title": "Native thermostat controls",
+    "url": "/#integration-section-3",
     "text": "inverter-climate publishes /Temperature in Celsius with /TemperatureType = 3 (room). Its identity suffix is a stable hash, and its optional /SwitchableOutput/0 temperature slider and /SwitchableOutput/1 Heat/Off selector belong to the same device. GUI v2 and VRM Remote Console use those standard controls without a GUI patch. Manual commands are opt-in, validated against fresh HA capabilities and journaled before dispatch. The D-Bus thread only queues requests; HA I/O runs outside it. Readback reflects HA observations, and uncertain commands are not replayed after restart. See the complete D-Bus contract and installation guide ."
   },
   {
-    "title": "Writing for Venus OS · MQTT contracts",
-    "url": "wiki/integration.html#section-4",
+    "title": "MQTT contracts",
+    "url": "/#integration-section-4",
     "text": "Native Venus telemetry uses N/<portal-id>/<service>/<instance>/<path> ; read requests use R/<portal-id>/... . Raw ESPHome/Tasmota sensor topics and application inverter/state use separate schemas. Use the publisher's README and a real portal ID. Do not assume a universal victron/# namespace."
   },
   {
-    "title": "Writing for Venus OS · Native installation contract",
-    "url": "wiki/integration.html#section-5",
+    "title": "Native installation contract",
+    "url": "/#integration-section-5",
     "text": "/data/service-name/ service/service-name/run service/service-name/log/run application files and local configuration /service/service-name -> /data/service-name/service/service-name Recreate the link from /data/rc.local before any early exit. Use svc and svstat , preserve service directory inodes on updates, and install dependencies before stopping the service. Firmware replaces rootfs files; keep persistent state under /data . See the installation guide and the service template ."
   },
   {
-    "title": "Writing for Venus OS · D-Bus value contract",
-    "url": "wiki/integration.html#section-6",
+    "title": "D-Bus value contract",
+    "url": "/#integration-section-6",
     "text": "Register all required paths before publishing the service name. Publish numeric values as numbers and unavailable measurements using the standard invalid value, not fabricated zero. Apply MQTT-thread updates on the GLib loop. Prefer batched ItemsChanged signals and bounded reconnection with backoff. A /BatteryCapacity string caused the stock VRM logger to crash in the September 2026 audit."
   },
   {
-    "title": "Writing for Venus OS · Rules that keep the fleet debuggable",
-    "url": "wiki/integration.html#section-7",
-    "text": "Log to stdout/stderr — multilog writes it to the configured bounded log directory; never background yourself. Reconnect loops with backoff — MQTT and D-Bus drop during GX reboots; treat disconnects as normal. One service, one job. Translation, decision-making, and audit live in separate processes (see Architecture ). Verify control integration. No governance or event-log service was running on the audited GX. Repository availability alone does not prove that live writes are mediated or audited. Inspect the deployed controller and validate each accepted D-Bus write. Source availability matters. dbus-ev reads Mercedes or Home Assistant and publishes to D-Bus; its integrated charger requires the Mercedes backend. inverter-control consumes D-Bus values. Mark unavailable source data correctly during outages and consult the migration guide before replacing the archived standalone charger. Daemontools logging. Services like dbus-tasmota-pv use the multilog daemontools pair for log rotation; others use stdout capture. Check each repo's service/run for the pattern. Integration patterns and their deployment limitations →"
+    "title": "Rules that keep the fleet debuggable",
+    "url": "/#integration-section-7",
+    "text": "Log to stdout/stderr — multilog writes it to the configured bounded log directory; never background yourself. Reconnect loops with backoff — MQTT and D-Bus drop during GX reboots; treat disconnects as normal. One service, one job. Translation, decision-making, and audit live in separate processes (see Architecture ). Verify control integration. No governance or event-log service was running on the audited GX. Repository availability alone does not prove that live writes are mediated or audited. Inspect the deployed controller and validate each accepted D-Bus write. Source availability matters. dbus-ev reads Mercedes or Home Assistant and publishes to D-Bus; its integrated charger requires the Mercedes backend. inverter-control consumes D-Bus values. Mark unavailable source data correctly during outages and consult the migration guide before replacing the archived standalone charger. Daemontools logging. Services like dbus-tasmota-pv use the multilog daemontools pair for log rotation; others use stdout capture. Check each repo's service/run for the pattern. Integration patterns and their deployment limitations → On this page Back to top ↑ 04 · CI / CD"
+  },
+  {
+    "title": "How every repo ships",
+    "url": "/#ci-heading",
+    "text": "The venus-os-ci-toolkit provides shared workflows and release tooling. Each project defines its own validation commands and artifact requirements; follow its checked-in contribution and release guides."
+  },
+  {
+    "title": "Reusable workflows and tools",
+    "url": "/#ci-section-1",
+    "text": "Workflow or tool Purpose python-ci.yml ruff lint · mypy · pytest · coverage gate → Codecov go-ci.yml golangci-lint · govulncheck · tests · coverage gate → Codecov tools/scorecard-scan Validates Scorecard results and writes SARIF; the calling workflow handles upload auto-approve-reusable.yml Metadata-only approval for eligible pull requests under the configured author and reviewer policy Consuming a toolkit workflow — always pinned to a full commit SHA: jobs: test: uses: victron-venus/venus-os-ci-toolkit/.github/workflows/python-ci.yml@875762362bb31b4899bf02fdf9e835188dc5eb80"
+  },
+  {
+    "title": "Non-negotiable rules",
+    "url": "/#ci-section-2",
+    "text": "Pin everything. Every uses: in every workflow resolves to a full commit SHA — never a tag or branch. Tags move; SHAs don't. This is the supply-chain boundary. Harden runners. Workflows include step-security/harden-runner to audit egress network calls. Never push to the default branch. Feature branch from the default branch, open a PR, let CI and CodeQL pass, merge via review. Eligible, non-draft PRs receive auto-approval independently of labels. The automerge label enables automatic merging after required checks and review requirements are satisfied. Conventional Commits. feat: , fix: , docs: , chore: — release tooling parses them. Approval and merge are separate. Follow the approval caller example and merge policy guide . Keep approval jobs metadata-only and preserve the documented eligibility checks."
+  },
+  {
+    "title": "Releases",
+    "url": "/#ci-section-3",
+    "text": "Application repositories use their .release-policy.json , RELEASING.md and docs/release-workflow.md to define checks, artifacts and release channels. The release pipeline creates immutable beta and RC candidates. Stable promotion requires approval and copies the verified, tested RC bytes without rebuilding. A GitHub release does not deploy production; container registry publication and deployment are separate operations. Use the target repository's release commands. Do not create release tags by hand or restore the retired direct-tag publication workflow. Infrastructure and community repositories run validation and explicit deployment instead of application release channels. See the organization release overview ."
+  },
+  {
+    "title": "Version synchronization",
+    "url": "/#ci-section-4",
+    "text": "Review base-version changes through a pull request. The target repository's release policy declares which version files must agree; projects do not all use the same file names or package format. Release tooling allocates candidate versions, applies declared build-time version overlays and records the source revision and artifact checksums. Follow that repository's versioning guide rather than manually changing a version and pushing a tag. Why so strict? These repos control physical hardware. A moved tag or an unreviewed workflow edit is not a cosmetic risk — treat CI config with the same care as control code. Next: contributing a change → On this page Back to top ↑ 05 · Contributing"
+  },
+  {
+    "title": "Making your first change",
+    "url": "/#contributing-heading",
+    "text": "Start with the target repository's contribution guide. Keep each pull request focused so reviewers can assess its behavior and validation."
+  },
+  {
+    "title": "The flow",
+    "url": "/#contributing-section-1",
+    "text": "Fork the target repository — or branch within the org if you're a maintainer. Create a feature branch from the target repository's default branch. One concern per branch. Make the change with tests where applicable. Bug fixes come with a regression test. Commit with Conventional Commits: feat: , fix: , docs: , chore: , refactor: , test: . Open a pull request. Describe what changes and why; link issues. CI and CodeQL must pass before merge. Address review feedback. Signed commits may be required on protected branches."
+  },
+  {
+    "title": "Local checks before pushing",
+    "url": "/#contributing-section-2",
+    "text": "Read the target repository's CONTRIBUTING.md and use its documented local validation command. Toolchains, lint rules and test package names differ between projects. If a repository provides scripts/ci.sh , inspect that script and install its documented prerequisites before running it: bash scripts/ci.sh Where the contribution guide also requires pre-commit, run the checked-in configuration and review any automatic changes: python3 -m pre_commit run --all-files Report the exact checks run and any limitations in the pull request. Offline checks do not establish physical-device behavior; installation and hardware acceptance are separate steps. See the website contribution guide for this site's own validation requirements."
+  },
+  {
+    "title": "Approval gates for control code",
+    "url": "/#contributing-gates",
+    "text": "Changes touching the write path — anything that ends up commanding an inverter or battery — get extra scrutiny by design: New setpoints or policy rules must preserve the deployed controller's source-validity, limit and watchdog checks and verify D-Bus write acknowledgements. The archived governance project is not an installed gate. Document the command's actual logging and verification path. Do not claim mandatory event-log coverage when that service is not deployed. Default-off. Risky behavior ships disabled until configuration explicitly enables it."
+  },
+  {
+    "title": "Where to ask",
+    "url": "/#contributing-section-4",
+    "text": "Bug or feature? Open an issue on the repo using the issue templates — they route to the right maintainers. Questions about Venus OS integration patterns start in integration-patterns discussions or the Victron community forum . Related: CI standards → Build your own layer"
+  },
+  {
+    "title": "Open by default. Yours to extend.",
+    "url": "/#contributing",
+    "text": "Every bridge, dashboard and guide is public source. Start with a working example, then keep only the parts your installation needs. Contribute a project ↗ Browse the organization"
   }
 ]

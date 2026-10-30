@@ -2,115 +2,23 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Contributing — Victron Venus Wiki</title>
-<meta name="description" content="How to contribute to victron-venus projects: fork and branch flow, conventional commits, local checks, PR expectations, and review gates.">
-<link rel="canonical" href="https://victron-venus.github.io/wiki/contributing.html">
-<meta name="theme-color" content="#f4f3ec">
-<link rel="icon" type="image/png" href="/assets/img/logo.png">
-<link rel="stylesheet" href="/assets/css/style.css?v=20261030g">
-<link rel="stylesheet" href="/assets/css/elevate.css?v=20261030g">
+<meta name="robots" content="noindex">
+<title>Contributing — Victron Venus</title>
+<link rel="canonical" href="https://victron-venus.github.io/#contributing">
+<meta http-equiv="refresh" content="0; url=/#contributing">
+<script>
+  (function () {
+    var map = {
+        "#section-1": "#contributing-section-1",
+        "#section-2": "#contributing-section-2",
+        "#gates": "#contributing-gates",
+        "#section-4": "#contributing-section-4"
+    };
+    location.replace((map[location.hash] || "").replace(/^#/, "/#") || "/#contributing");
+  })();
+</script>
 </head>
-<body class="docs-page">
-<a class="skip-link" href="#main">Skip to content</a>
-
-<header class="nav">
-  <div class="container nav-inner">
-    <a class="brand" href="../" aria-label="Victron Venus home">
-      <img src="/assets/img/logo.png" alt="" width="22" height="22" class="brand-logo">
-      victron-venus
-    </a>
-    <nav class="nav-links" aria-label="Main navigation">
-      <a href="../projects.html">Projects</a>
-      <a href="architecture.html">Architecture</a>
-      <a href="./" aria-current="page">Docs</a>
-      <a class="nav-gh" href="https://github.com/victron-venus">GitHub&nbsp;↗</a>
-    </nav>
-<details class="mobile-nav"><summary>Menu</summary><nav class="mobile-links" aria-label="Mobile navigation">
-      <a href="../projects.html">Projects</a>
-      <a href="architecture.html">Architecture</a>
-      <a href="./" aria-current="page">Docs</a>
-      <a class="nav-gh" href="https://github.com/victron-venus">GitHub&nbsp;↗</a>
-    </nav></details><details class="doc-search"><summary aria-label="Search documentation">Search ↗</summary><div class="search-panel"><label for="docs-query">Search the documentation</label><input id="docs-query" type="search" placeholder="Try MQTT, battery or install" autocomplete="off"><p class="search-status" role="status">Enter a topic to find a guide.</p><ul class="search-results"></ul><a href="../wiki/">Browse all guides →</a></div></details>
-  </div>
-</header>
-
-<main id="main" class="container section">
-<div class="wiki-layout">
-
-<details class="wiki-drawer"><summary>Guides &amp; page contents</summary><nav class="wiki-nav" aria-label="Wiki navigation">
-  <span class="wn-label">Wiki</span>
-  <a href="./">Overview</a>
-  <a href="install.html">Install guide</a>
-  <a href="architecture.html">Architecture</a>
-  <a href="integration.html">Venus OS integration</a>
-  <a href="ci-standards.html">CI standards</a>
-  <a href="contributing.html" aria-current="page">Contributing</a>
-</nav></details>
-
-<article class="prose">
-<p class="eyebrow">05 · Contributing</p>
-<h1 style="font-family:var(--font-display);font-size:clamp(1.7rem,2.5vw + 0.5rem,2.4rem);margin-top:0.75rem">Making your first change</h1>
-<p style="margin-top:0.75rem">Start with the target repository's contribution guide.
-Keep each pull request focused so reviewers can assess its behavior and validation.</p>
-
-<h2 id="section-1">The flow</h2>
-<ol class="step-list">
-  <li><strong>Fork</strong> the target repository — or branch within the org if you're a maintainer.</li>
-  <li><strong>Create a feature branch</strong> from the target repository's default branch. One concern per branch.</li>
-  <li><strong>Make the change</strong> with tests where applicable. Bug fixes come with a regression test.</li>
-  <li><strong>Commit with Conventional Commits:</strong> <code>feat:</code>, <code>fix:</code>,
-  <code>docs:</code>, <code>chore:</code>, <code>refactor:</code>, <code>test:</code>.</li>
-  <li><strong>Open a pull request.</strong> Describe what changes and why; link issues. CI and CodeQL must pass before merge.</li>
-  <li><strong>Address review feedback.</strong> Signed commits may be required on protected branches.</li>
-</ol>
-
-<h2 id="section-2">Local checks before pushing</h2>
-<p>Read the target repository's <code>CONTRIBUTING.md</code> and use its documented
-local validation command. Toolchains, lint rules and test package names differ
-between projects. If a repository provides <code>scripts/ci.sh</code>, inspect
-that script and install its documented prerequisites before running it:</p>
-<pre><code>bash scripts/ci.sh</code></pre>
-<p>Where the contribution guide also requires pre-commit, run the checked-in
-configuration and review any automatic changes:</p>
-<pre><code>python3 -m pre_commit run --all-files</code></pre>
-<p>Report the exact checks run and any limitations in the pull request. Offline
-checks do not establish physical-device behavior; installation and hardware
-acceptance are separate steps. See the
-<a href="https://github.com/victron-venus/.github/blob/main/CONTRIBUTING.md">website contribution guide</a>
-for this site's own validation requirements.</p>
-
-<h2 id="gates">Approval gates for control code</h2>
-<p>Changes touching the <em>write path</em> — anything that ends up commanding an inverter or battery —
-get extra scrutiny by design:</p>
-<ul>
-  <li>New setpoints or policy rules must preserve the deployed controller's source-validity, limit and watchdog checks and verify D-Bus write acknowledgements. The archived governance project is not an installed gate.</li>
-  <li>Document the command's actual logging and verification path. Do not claim mandatory event-log coverage when that service is not deployed.</li>
-  <li>Default-off. Risky behavior ships disabled until configuration explicitly enables it.</li>
-</ul>
-
-<h2 id="section-4">Where to ask</h2>
-<ul>
-  <li>Bug or feature? Open an issue on the repo using the issue templates — they route to the right maintainers.</li>
-  <li>Questions about Venus OS integration patterns start in
-  <a href="https://github.com/victron-venus/venus-os-integration-patterns/issues">integration-patterns discussions</a>
-  or the <a href="https://community.victronenergy.com">Victron community forum</a>.</li>
-</ul>
-
-<p style="margin-top:2rem"><a href="ci-standards.html">Related: CI standards →</a></p>
-</article>
-</div>
-</main>
-
-<footer>
-  <div class="container">
-    <p class="foot-note" style="margin-top:0;border:0;padding-top:0">Independent open-source projects. Not affiliated with Victron Energy B.V.
-    © <span data-year>2026</span> · <a href="https://github.com/victron-venus/.github">source of this site</a></p>
-  </div>
-</footer>
-
-<script src="/assets/js/main.js?v=20261030g" defer></script>
-<script src="/assets/js/site.js?v=20261030g" defer></script>
-<script src="/assets/js/app.js?v=20261030g" defer></script>
+<body>
+<p>This page is now part of the <a href="/#contributing">single-page Victron Venus site</a>.</p>
 </body>
 </html>

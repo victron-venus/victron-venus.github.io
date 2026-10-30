@@ -41,7 +41,8 @@ class PublicSiteTests(unittest.TestCase):
         for entry in entries:
             url = urlsplit(entry['url'])
             self.assertFalse(url.scheme or url.netloc)
-            page = Page((ROOT / url.path).read_text())
+            target = ROOT / 'index.html' if url.path in ('', '/') else ROOT / url.path.lstrip('/')
+            page = Page(target.read_text())
             if url.fragment:
                 self.assertIn(url.fragment, page.ids, entry['url'])
         self.assertTrue(any('battery' in e['text'].lower() for e in entries))
@@ -62,7 +63,10 @@ class PublicSiteTests(unittest.TestCase):
                 url = urlsplit(value)
                 if url.netloc or url.scheme:
                     continue
-                target = path.parent / unquote(url.path) if url.path else path
+                if url.path.startswith('/'):
+                    target = ROOT / unquote(url.path.lstrip('/'))
+                else:
+                    target = path.parent / unquote(url.path) if url.path else path
                 if target.is_dir():
                     target /= 'index.html'
                 self.assertTrue(target.is_file(), f'{path.name}: {value}')
@@ -74,7 +78,7 @@ class PublicSiteTests(unittest.TestCase):
         parser.feed('<main><nav>private nav noise</nav><h1>Guide</h1><p>Intro</p><h2 id="install">Install</h2><p>Read <strong>this</strong>.</p><script>secret()</script></main>')
         entries = parser.result()
         self.assertEqual(entries[1]['url'], 'guide.html#install')
-        self.assertEqual(entries[1]['title'], 'Guide · Install')
+        self.assertEqual(entries[1]['title'], 'Install')
         self.assertNotIn('private', json.dumps(entries))
         self.assertNotIn('secret', json.dumps(entries))
 
@@ -84,10 +88,22 @@ class PublicSiteTests(unittest.TestCase):
         self.assertLess((ROOT / 'assets/css/elevate.css').stat().st_size, 40_000)
 
     def test_pages_load_the_shared_motion_layer(self):
-        for path in [ROOT / 'index.html', ROOT / 'projects.html', *sorted((ROOT / 'wiki').glob('*.html'))]:
+        for path in [ROOT / 'index.html', ROOT / '404.html']:
             text = path.read_text()
             self.assertIn('elevate.css', text, path.name)
             self.assertIn('app.js', text, path.name)
+
+    def test_legacy_pages_redirect_to_single_page(self):
+        index_ids = set(Page((ROOT / 'index.html').read_text()).ids)
+        for path in [ROOT / 'projects.html', *(ROOT / 'wiki').glob('*.html')]:
+            text = path.read_text()
+            self.assertIn('name="robots" content="noindex"', text, path.name)
+            self.assertIn('http-equiv="refresh"', text, path.name)
+            self.assertRegex(text, r'url=/#[a-z]+', path.name)
+            self.assertRegex(text, r'rel="canonical" href="https://victron-venus\.github\.io/#[a-z]+"', path.name)
+            for old, new in re.findall(r'"(#[^"]+)": "(#[^"]+)"', text):
+                self.assertIn(new.lstrip('#'), index_ids, f'{path.name}: {old} -> {new}')
+            self.assertNotIn(' + (map[location.hash]', text, path.name)
 
     def test_canonical_urls_use_the_root_domain(self):
         for path in [ROOT / 'index.html', ROOT / 'projects.html', *sorted((ROOT / 'wiki').glob('*.html'))]:

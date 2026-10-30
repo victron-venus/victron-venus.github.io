@@ -5,24 +5,25 @@ Public organization site for
 **https://victron-venus.github.io/**.
 
 The site is static HTML, CSS and JavaScript with no build step, framework or
-remote fonts. It presents the ecosystem, the public project catalog and the
-guides in [`wiki/`](wiki/).
+remote fonts. The landing page, public project catalog and all guides live on
+one page at the root address, with anchored navigation between sections.
 
 ## What is here
 
-- [`index.html`](index.html) — landing page with a floating system topology,
-  ecosystem entry points, flagship projects and guide cards.
-- [`projects.html`](projects.html) — curated catalog with category filters,
-  text search and live GitHub metadata.
-- [`wiki/`](wiki/) — installation, architecture, integration, CI and
-  contribution guides, with offline search, a page outline and copy controls.
+- [`index.html`](index.html) — single-page site: landing hero and topology,
+  ecosystem entry points, flagship projects, the full filterable catalog and
+  installation, architecture, integration, CI and contribution guides.
+- [`projects.html`](projects.html) and [`wiki/`](wiki/) — legacy entry points
+  kept as redirects to the corresponding sections on the root page.
+- Anchored navigation, a sticky per-guide outline and offline search move
+  between sections without leaving the page.
 - [`assets/css/style.css`](assets/css/style.css) — shared editorial theme and
   light reading palette.
 - [`assets/css/elevate.css`](assets/css/elevate.css) — presentation layer:
   floating glass navigation, atmospheric gradients, layered cards, scroll
   reveals and view transitions.
-- [`assets/js/app.js`](assets/js/app.js) — site motion, GitHub metadata and
-  client-side page loading.
+- [`assets/js/app.js`](assets/js/app.js) — site motion, same-page navigation
+  state, GitHub metadata and legacy client-side page loading.
 - [`assets/js/main.js`](assets/js/main.js) — catalog filters, diagram tracing
   and the opt-in translation UI.
 - [`assets/js/site.js`](assets/js/site.js) — documentation search, outline and
@@ -30,14 +31,15 @@ guides in [`wiki/`](wiki/).
 
 ## Progressive enhancement
 
-Every page is readable and navigable without JavaScript. Navigation falls back
-to ordinary page loads. The catalog remains a complete static catalog when the
+Every section is readable and navigable without JavaScript; the top menu uses
+ordinary anchor links. The catalog remains a complete static catalog when the
 GitHub API is unavailable.
 
 With JavaScript enabled:
 
-- internal pages are fetched and swapped in place, with the View Transitions API
-  where supported and a normal navigation fallback otherwise;
+- navigation marks the active section, smooth-scrolls to anchors and keeps the
+  address bar shareable; legacy cross-document links still work with the View
+  Transitions API where supported and a normal page load otherwise;
 - cards and sections reveal on scroll, project cards tilt under a mouse and the
   system topology responds to pointer depth;
 - public repository metadata (stars, forks and last push) decorates project
@@ -62,9 +64,9 @@ behavior:
 python3 -m http.server 4173 --bind 127.0.0.1
 ```
 
-Open <http://127.0.0.1:4173/>. Check the catalog filters, a guide with a hash
-link, documentation search and the narrow layout. The live GitHub metadata is
-subject to the public API rate limit.
+Open <http://127.0.0.1:4173/>. Check the top navigation, catalog filters, a
+guide with a hash link, documentation search and the narrow layout. The live
+GitHub metadata is subject to the public API rate limit.
 
 After changing guide text, heading IDs or anchors, regenerate the search index:
 
