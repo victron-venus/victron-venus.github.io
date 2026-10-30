@@ -1028,7 +1028,6 @@ html.is-routing .wcard { pointer-events: none; }
   margin: 1rem 0 1.75rem;
 }
 .guide-prose .guide-title::after { display: none; }
-.guide-section, .catalog-block { scroll-margin-top: 96px; }
 
 @media (max-width: 1000px) {
   .nav-links { display: none; }
