@@ -111,9 +111,9 @@ node scripts/check-interaction.mjs --url http://127.0.0.1:4173/
 
 It is intentionally outside `scripts/ci.sh`: the pre-merge gate cannot validate
 a revision that is not deployed yet, and the runner needs a browser. The
-scheduled [live focus and hover workflow](.github/workflows/live-interaction.yml)
-runs it daily against production; pass `CHROME_PATH` or `--browser` when Chrome
-is not in a standard location.
+[Live focus and hover workflow](.github/workflows/live-interaction.yml) runs it
+after each push to `main`, once Pages has published that commit; pass
+`CHROME_PATH` or `--browser` when Chrome is not in a standard location.
 
 ## Content rules
 

@@ -1,12 +1,18 @@
 # The deployed site is the subject, so this check runs after publication rather
 # than in the pre-merge gate; a pull request cannot validate code not yet served.
+# `main` is the Pages source branch while the repository default branch is
+# feature/redirect, so the workflow waits for the Pages build of this commit.
 name: Live focus and hover
 'on':
+  push:
+    branches:
+      - main
   schedule:
     - cron: 20 6 * * *
   workflow_dispatch: {}
 permissions:
   contents: read
+  pages: read
 concurrency:
   group: live-interaction
   cancel-in-progress: true
@@ -14,7 +20,7 @@ jobs:
   interaction:
     name: Live keyboard and pointer states
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - name: Harden the runner (audit outbound calls)
         uses: step-security/harden-runner@dc2769abcc0fcfbadfc1df54081c1608579ef6b2 # v2.22.2
@@ -23,5 +29,22 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
+      - name: Wait for the Pages build of this commit
+        if: github.event_name == 'push'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for attempt in $(seq 1 60); do
+            build=$(gh api "repos/${GITHUB_REPOSITORY}/pages/builds/latest")
+            commit=$(printf '%s' "$build" | python3 -c 'import json,sys; print(json.load(sys.stdin).get("commit", ""))')
+            status=$(printf '%s' "$build" | python3 -c 'import json,sys; print(json.load(sys.stdin).get("status", ""))')
+            echo "attempt ${attempt}: ${commit} ${status}"
+            if [ "$commit" = "$GITHUB_SHA" ] && [ "$status" = "built" ]; then
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "Pages did not publish ${GITHUB_SHA}" >&2
+          exit 1
       - name: Check live focus and hover states
         run: node scripts/check-interaction.mjs --url https://victron-venus.github.io/

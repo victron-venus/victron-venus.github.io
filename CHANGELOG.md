@@ -14,10 +14,11 @@ has hover feedback; it previously changed only the pointer. Shared asset URLs
 move to `?v=20261030s`.
 
 The check defaults to `https://victron-venus.github.io/`, accepts `--url` for a
-local server, and is run daily by the scheduled
-[`live-interaction`](.github/workflows/live-interaction.yml) workflow. It is not
-part of `scripts/ci.sh`, because the pre-merge gate runs before publication and
-cannot validate the deployed revision.
+local server, and is run by the
+[`live-interaction`](.github/workflows/live-interaction.yml) workflow after
+Pages publishes each push to `main`. It is not part of `scripts/ci.sh`, because
+the pre-merge gate runs before publication and cannot validate the deployed
+revision.
 
 ### Compatibility and upgrade
 
