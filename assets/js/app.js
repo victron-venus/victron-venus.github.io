@@ -15,6 +15,7 @@
     revealObserver: null,
     livePromise: null,
     liveReady: false,
+    activeNavHash: null,
     lastFocused: null,
   };
 
@@ -84,14 +85,14 @@
     update();
   }
 
-  function initNavState() {
-    const links = $$(".nav-links a, .mobile-links a");
+  function setNavCurrent(hash) {
+    const scopedHash = hash.startsWith("#catalog-") ? "#projects" : hash;
+    if (state.activeNavHash === scopedHash) return;
+    state.activeNavHash = scopedHash;
     const here = location.pathname.replace(/index\.html$/, "");
-    const hash = location.hash;
-    const local = links
+    const local = $$(".nav-links a, .mobile-links a")
       .map((link) => ({ link, url: new URL(link.href) }))
       .filter(({ url }) => url.origin === location.origin);
-    const scopedHash = hash.startsWith("#catalog-") ? "#projects" : hash;
     for (const { link, url } of local) {
       const samePage = url.pathname === here;
       const isCurrent = samePage && (url.hash
@@ -100,6 +101,44 @@
       if (isCurrent) link.setAttribute("aria-current", "page");
       else link.removeAttribute("aria-current");
     }
+  }
+
+  function initNavState() {
+    setNavCurrent(location.hash);
+  }
+
+  function initScrollSpy() {
+    const header = $(".nav");
+    let ticking = false;
+
+    const update = () => {
+      ticking = false;
+      const offset = (header ? header.getBoundingClientRect().bottom : 0) + 44;
+      const seen = new Set();
+      for (const link of $$(".nav-links a, .mobile-links a")) {
+        const url = new URL(link.href);
+        if (url.origin !== location.origin || !url.hash || seen.has(url.hash)) continue;
+        seen.add(url.hash);
+        const target = document.getElementById(decodeURIComponent(url.hash.slice(1)));
+        if (!target) continue;
+        const rect = target.getBoundingClientRect();
+        if (rect.top <= offset && rect.bottom > offset) {
+          setNavCurrent(url.hash);
+          return;
+        }
+      }
+      setNavCurrent("");
+    };
+
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(update);
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+    window.requestAnimationFrame(update);
   }
 
   /* ---------- Reveal ---------- */
@@ -554,6 +593,7 @@
     initHeader();
     initRouter();
     initPage(document);
+    initScrollSpy();
   }
 
   window.VV = {
