@@ -663,7 +663,7 @@ a.core:hover { text-decoration: none; }
   margin-bottom: 1.25rem;
   font-size: .68rem;
   letter-spacing: .2em;
-  color: var(--amber-dim);
+  color: var(--amber);
 }
 .wcard h3 { font-size: 1.12rem; letter-spacing: -.025em; }
 .wcard p { line-height: 1.6; }

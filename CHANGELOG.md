@@ -1,5 +1,23 @@
 # Source change history
 
+## 2026-10-30 — automated contrast check in CI
+
+### Changes
+
+`scripts/ci.sh` now runs `scripts/check-contrast.py`. The check resolves every
+text/background pair from the `light-dark()` palette in both schemes and fails
+below WCAG AA normal-text contrast (4.5:1). It also fails when a CSS `color:`
+rule uses a token missing from the matrix, so a new text colour cannot bypass
+the check. The wiki card number label now uses the AA-compliant `--amber`
+instead of `--amber-dim`; no other visible colour changed.
+
+### Compatibility and upgrade
+
+No URLs, markup or behaviour changed. The check covers token values, not rendered
+pixels, gradients or translucent layers; those still need a browser pass. Add a
+new text token to `PAIRS` in the script, or document a non-text exemption with a
+reason.
+
 ## 2026-10-30 — light and dark colour schemes
 
 ### Changes

@@ -90,10 +90,12 @@ bash scripts/ci.sh
 ```
 
 `scripts/ci.sh` checks source syntax, workflow contracts, the generated search
-index and the site regression tests. The site tests verify local assets and
-navigation, stable anchors, canonical URLs, the absence of third-party script
-tags and the search index. They do not launch a browser, contact GitHub or
-publish the site.
+index, light and dark text contrast and the site regression tests. The contrast
+check resolves the `light-dark()` palette and fails below WCAG AA (4.5:1) for
+every listed text pair, and when a stylesheet colours text from a token the
+matrix does not cover. The site tests verify local assets and navigation, stable
+anchors, canonical URLs, the absence of third-party script tags and the search
+index. They do not launch a browser, contact GitHub or publish the site.
 
 ## Content rules
 
