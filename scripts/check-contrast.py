@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
-"""Fail when a text colour and its background fall below WCAG AA contrast.
+"""Fail when text or UI colours fall below WCAG AA contrast.
 
 The palette stores both schemes as `light-dark(light, dark)` pairs. This check
 reads those tokens from the stylesheet, resolves every pair for both schemes and
-compares the WCAG 2.1 contrast ratio against the AA threshold for normal text
-(4.5:1). It also fails when a CSS `color:` rule references a token that is not
-listed in PAIRS, so a new text colour cannot silently skip the check.
+compares WCAG 2.1 contrast ratios: 4.5:1 for normal text and 3:1 for graphical
+objects and interactive boundaries (WCAG 1.4.11). It also fails when a CSS
+`color:` rule references a token that is not listed in TEXT_PAIRS, so a new text
+colour cannot silently skip the check.
 
 Limitations: this is a token-level check. It does not measure rendered pixels,
 translucent overlays, gradients, images behind text, hover-only declarations
@@ -23,12 +24,13 @@ ROOT = Path(__file__).resolve().parents[1]
 STYLE = ROOT / "assets/css/style.css"
 STYLESHEETS = sorted((ROOT / "assets/css").glob("*.css"))
 
-# WCAG 2.1 AA for normal text. Large text (>= 24 px, or >= 18.66 px bold) may
-# use 3:1, but every pair below is also used at body size somewhere.
+# WCAG 2.1 AA thresholds. Large text (>= 24 px, or >= 18.66 px bold) may use
+# 3:1, but every text pair below is also used at body size somewhere.
 AA_NORMAL = 4.5
+AA_NON_TEXT = 3.0
 
 # (foreground token, background token, what the pair covers)
-PAIRS = [
+TEXT_PAIRS = [
     ("--ink", "--bg", "body text"),
     ("--ink", "--bg-deep", "body text on alternate sections"),
     ("--ink", "--panel", "card and code text"),
@@ -48,6 +50,25 @@ PAIRS = [
     ("--cyan", "--bg-deep", "inline links on alternate sections"),
     ("--cyan", "--panel", "links in cards"),
     ("--bg", "--amber", "primary button label"),
+]
+
+# Non-text contrast (WCAG 1.4.11): interactive boundaries and meaningful icons.
+# `--control-edge` is the boundary of form fields and icon buttons; `--edge`
+# is a decorative divider and deliberately not listed here.
+UI_PAIRS = [
+    ("--control-edge", "--bg", "field and icon-button borders on the page"),
+    ("--control-edge", "--panel", "field borders on their fill"),
+    ("--control-edge", "--panel-hi", "control borders on raised panels"),
+    ("--ink-dim", "--bg", "icon-only button glyphs"),
+    ("--ink-dim", "--panel", "icon glyphs on controls"),
+    ("--amber", "--bg", "focus ring and amber icons"),
+    ("--amber", "--panel", "amber icons on cards"),
+    ("--cyan", "--bg", "cyan icons"),
+    ("--cyan", "--panel", "cyan icons on cards"),
+    ("--cyan-dim", "--bg", "focused field border"),
+    ("--cyan-dim", "--panel", "focused field border on its fill"),
+    ("--amber-dim", "--bg", "pressed filter boundary on the page"),
+    ("--amber-dim", "--panel", "pressed filter boundary on its fill"),
 ]
 
 # Tokens used as CSS `color` that are not body text and therefore not checked.
@@ -85,6 +106,7 @@ def split_arguments(value: str) -> list[str]:
 def root_declarations(text: str) -> dict[str, str]:
     """Custom properties declared in top-level `:root` blocks; later wins."""
     declarations: dict[str, str] = {}
+    text = re.sub(r"/\*.*?\*/", "", text, flags=re.S)
     for block in TOKEN_BLOCK.finditer(text):
         for line in block.group(1).split(";"):
             if ":" not in line:
@@ -166,7 +188,9 @@ def uncovered_foregrounds(text: str, checked: set[str], exempt: dict[str, str]) 
 
 
 def check(
-    tokens: dict[str, tuple[str, str]], pairs: list[tuple[str, str, str]] = PAIRS
+    tokens: dict[str, tuple[str, str]],
+    pairs: list[tuple[str, str, str]] = TEXT_PAIRS,
+    minimum: float = AA_NORMAL,
 ) -> tuple[list[str], list[str]]:
     """Return readable rows and failures for every pair in both schemes."""
     rows, failures = [], []
@@ -190,11 +214,10 @@ def check(
                 failures.append(f"{scheme}: {foreground} on {background}: {error}")
                 continue
             values.append(ratio)
-            status = "ok" if ratio >= AA_NORMAL else "LOW"
-            if ratio < AA_NORMAL:
+            if ratio < minimum:
                 failures.append(
                     f"{scheme}: {foreground} on {background} ({purpose}) is "
-                    f"{ratio:.2f}:1, below AA {AA_NORMAL}:1"
+                    f"{ratio:.2f}:1, below AA {minimum}:1"
                 )
         if len(values) == 2:
             rows.append(
@@ -209,9 +232,18 @@ def main() -> int:
     except (OSError, ContrastError) as error:
         print(f"Contrast check cannot run: {error}", file=sys.stderr)
         return 1
-    rows, failures = check(tokens)
-    checked = {foreground for foreground, _background, _purpose in PAIRS}
-    checked |= {background for _foreground, background, _purpose in PAIRS}
+    groups = (
+        ("normal text", AA_NORMAL, TEXT_PAIRS),
+        ("non-text UI", AA_NON_TEXT, UI_PAIRS),
+    )
+    rows_by_group, failures = [], []
+    checked: set[str] = set()
+    for title, minimum, pairs in groups:
+        rows, group_failures = check(tokens, pairs, minimum)
+        rows_by_group.append((title, minimum, rows))
+        failures.extend(group_failures)
+        checked |= {foreground for foreground, _background, _purpose in pairs}
+        checked |= {background for _foreground, background, _purpose in pairs}
     scan_failures = []
     for stylesheet in STYLESHEETS:
         for token in uncovered_foregrounds(stylesheet.read_text(encoding="utf-8"), checked, EXEMPT_FOREGROUND):
@@ -219,15 +251,18 @@ def main() -> int:
                 f"{stylesheet.name} sets color from {token}, which is not in scripts/check-contrast.py"
             )
     failures.extend(scan_failures)
-    print(f"WCAG AA normal-text contrast ({AA_NORMAL}:1), token pairs from {STYLE.name}")
-    for row in rows:
-        print("  " + row)
+    print(f"WCAG AA contrast, token pairs from {STYLE.name}")
+    for title, minimum, rows in rows_by_group:
+        print(f"\n{title} ({minimum}:1)")
+        for row in rows:
+            print("  " + row)
     if failures:
         print("\nContrast check failed:", file=sys.stderr)
         for failure in failures:
             print(f"  - {failure}", file=sys.stderr)
         return 1
-    print(f"\nContrast check passed: {len(PAIRS)} pairs x 2 schemes.")
+    total = len(TEXT_PAIRS) + len(UI_PAIRS)
+    print(f"\nContrast check passed: {len(TEXT_PAIRS)} text + {len(UI_PAIRS)} UI pairs x 2 schemes ({total} total).")
     return 0
 
 

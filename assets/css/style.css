@@ -7,6 +7,9 @@
   --panel-hi: light-dark(#dce2d1, #2d352a);
   --edge: light-dark(#c9d0be, #3b4437);
   --edge-hi: light-dark(#8b987b, #64745b);
+  /* Interactive boundaries meet the 3:1 non-text contrast threshold; --edge
+     stays a decorative divider and is intentionally lighter. */
+  --control-edge: light-dark(#707d66, #829076);
   --ink: light-dark(#20271e, #f1f2eb);
   --ink-dim: light-dark(#4b5845, #bac3b3);
   --ink-faint: light-dark(#52624b, #a0ad97);
@@ -118,7 +121,7 @@ a:hover { text-decoration: underline; }
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
-  border: 1px solid var(--edge);
+  border: 1px solid var(--control-edge);
   background: var(--panel);
 }
 
@@ -131,7 +134,7 @@ a:hover { text-decoration: underline; }
   flex: none;
   width: 38px;
   height: 38px;
-  border: 1px solid var(--edge);
+  border: 1px solid var(--control-edge);
   border-radius: 99px;
   background: transparent;
   color: var(--ink-dim);
@@ -206,7 +209,7 @@ a:hover { text-decoration: underline; }
 .btn:hover { text-decoration: none; transform: translateY(-1px); }
 .btn-primary { background: var(--amber); color: #241503; }
 .btn-primary:hover { background: #ffc477; }
-.btn-ghost { border-color: var(--edge-hi); color: var(--ink); }
+.btn-ghost { border-color: var(--control-edge); color: var(--ink); }
 .btn-ghost:hover { border-color: var(--cyan); color: var(--cyan); }
 
 /* ---------- One-line diagram ---------- */
@@ -396,7 +399,7 @@ a.tag:hover { color: var(--cyan); border-color: var(--cyan-dim); text-decoration
   font-size: 0.78rem;
   color: var(--ink-dim);
   background: var(--panel);
-  border: 1px solid var(--edge);
+  border: 1px solid var(--control-edge);
   padding: 0.42rem 0.9rem;
   border-radius: 99px;
   cursor: pointer;
@@ -407,7 +410,7 @@ a.tag:hover { color: var(--cyan); border-color: var(--cyan-dim); text-decoration
 .search-box {
   margin-left: auto;
   background: var(--panel);
-  border: 1px solid var(--edge);
+  border: 1px solid var(--control-edge);
   border-radius: 99px;
   color: var(--ink);
   font-family: var(--font-mono);
@@ -421,7 +424,7 @@ a.tag:hover { color: var(--cyan); border-color: var(--cyan-dim); text-decoration
 /* Translate picker (footer) */
 .lang-select {
   background: var(--panel);
-  border: 1px solid var(--edge);
+  border: 1px solid var(--control-edge);
   border-radius: 99px;
   color: var(--ink-dim);
   font-family: var(--font-mono);

@@ -30,15 +30,28 @@ class ContrastTests(unittest.TestCase):
         )
 
     def test_current_palette_passes_both_schemes(self):
-        rows, failures = CONTRAST.check(CONTRAST.load_tokens())
-        self.assertEqual(len(rows), len(CONTRAST.PAIRS))
-        self.assertEqual(failures, [])
+        tokens = CONTRAST.load_tokens()
+        for pairs, minimum in (
+            (CONTRAST.TEXT_PAIRS, CONTRAST.AA_NORMAL),
+            (CONTRAST.UI_PAIRS, CONTRAST.AA_NON_TEXT),
+        ):
+            rows, failures = CONTRAST.check(tokens, pairs, minimum)
+            self.assertEqual(len(rows), len(pairs))
+            self.assertEqual(failures, [])
 
     def test_low_contrast_pair_fails(self):
         tokens = {'--fg': ('#777777', '#777777'), '--bg': ('#ffffff', '#ffffff')}
         _rows, failures = CONTRAST.check(tokens, pairs=[('--fg', '--bg', 'fixture')])
         self.assertEqual(len(failures), 2)
         self.assertIn('below AA', failures[0])
+
+    def test_ui_threshold_is_three_to_one(self):
+        tokens = {'--fg': ('#888888', '#888888'), '--bg': ('#ffffff', '#ffffff')}
+        pairs = [('--fg', '--bg', 'fixture')]
+        _rows, text_failures = CONTRAST.check(tokens, pairs, CONTRAST.AA_NORMAL)
+        _rows, ui_failures = CONTRAST.check(tokens, pairs, CONTRAST.AA_NON_TEXT)
+        self.assertEqual(len(text_failures), 2)
+        self.assertEqual(ui_failures, [])
 
 
 if __name__ == '__main__':

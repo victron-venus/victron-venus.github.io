@@ -5,11 +5,14 @@
 ### Changes
 
 `scripts/ci.sh` now runs `scripts/check-contrast.py`. The check resolves every
-text/background pair from the `light-dark()` palette in both schemes and fails
-below WCAG AA normal-text contrast (4.5:1). It also fails when a CSS `color:`
-rule uses a token missing from the matrix, so a new text colour cannot bypass
-the check. The wiki card number label now uses the AA-compliant `--amber`
-instead of `--amber-dim`; no other visible colour changed.
+paired token from the `light-dark()` palette in both schemes and fails below
+WCAG AA: 4.5:1 for normal text and 3:1 for field borders, focus rings and
+meaningful icons. It also fails when a CSS `color:` rule uses a token missing
+from the matrix, so a new text colour cannot bypass the check. Interactive
+boundaries moved to a new `--control-edge` token (3.29:1 or better against every
+adjacent surface in both schemes); decorative dividers keep the lighter `--edge`.
+The wiki card number label now uses the AA-compliant `--amber` instead of
+`--amber-dim`.
 
 ### Compatibility and upgrade
 

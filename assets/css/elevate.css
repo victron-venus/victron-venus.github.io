@@ -145,7 +145,7 @@ main { position: relative; }
   background: var(--amber);
   box-shadow: 0 0 8px var(--amber);
 }
-.nav-gh { background: light-dark(rgba(32, 39, 30, .03), rgba(255, 255, 255, .04)); border-color: var(--glass-edge); }
+.nav-gh { background: light-dark(rgba(32, 39, 30, .03), rgba(255, 255, 255, .04)); border-color: var(--control-edge); }
 .nav-gh:hover { background: light-dark(rgba(64, 99, 36, .1), rgba(213, 236, 164, .1)); }
 
 .doc-search summary {
@@ -296,7 +296,7 @@ main { position: relative; }
 .btn-primary:hover { background: linear-gradient(145deg, #f2ffdc, #e0f5b0 55%, #cbe89a); }
 .btn-ghost {
   background: light-dark(rgba(32, 39, 30, .03), rgba(255, 255, 255, .035));
-  border-color: var(--glass-edge);
+  border-color: var(--control-edge);
   backdrop-filter: blur(10px);
 }
 .btn-ghost:hover { border-color: light-dark(rgba(23, 97, 86, .45), rgba(163, 215, 206, .55)); background: light-dark(rgba(23, 97, 86, .06), rgba(163, 215, 206, .07)); }
@@ -715,12 +715,12 @@ a.core:hover { text-decoration: none; }
 .filter-btn:hover { transform: translateY(-1px); }
 .filter-btn[aria-pressed="true"] {
   color: var(--amber);
-  border-color: light-dark(rgba(64, 99, 36, .42), rgba(213, 236, 164, .45));
+  border-color: var(--amber-dim);
   background: light-dark(rgba(64, 99, 36, .1), rgba(213, 236, 164, .1));
   box-shadow: 0 0 0 1px light-dark(rgba(64, 99, 36, .06), rgba(213, 236, 164, .06)), 0 8px 20px light-dark(rgba(45, 50, 38, .1), rgba(0, 0, 0, .18));
 }
 .search-box { background: light-dark(rgba(255, 255, 255, .55), rgba(255, 255, 255, .03)); transition: border-color .25s ease, box-shadow .25s ease; }
-.search-box:focus { border-color: light-dark(rgba(23, 97, 86, .45), rgba(163, 215, 206, .5)); box-shadow: 0 0 0 3px light-dark(rgba(23, 97, 86, .1), rgba(163, 215, 206, .08)); }
+.search-box:focus { border-color: var(--cyan); box-shadow: 0 0 0 3px light-dark(rgba(23, 97, 86, .1), rgba(163, 215, 206, .08)); }
 .group { margin-bottom: 3.5rem; }
 .group > h2 { font-size: 1.4rem; letter-spacing: -.03em; }
 .group > p.desc { max-width: 76ch; }
