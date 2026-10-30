@@ -1,21 +1,25 @@
 # OpenSSF readiness evidence
 
-This project contains executable redirect and CI code and is included in the
+This project contains executable website and CI code and is included in the
 public repository maintenance scope.
 
-- Purpose and destination: [README](../README.md) and `index.html`.
+- Purpose and content: [README](../README.md), `index.html`, `projects.html` and
+  the guides in `wiki/`.
 - Contribution and testing instructions: [CONTRIBUTING](../CONTRIBUTING.md).
 - Confidential reporting and supported source: [SECURITY](../SECURITY.md).
-- Automated checks: `scripts/ci.sh`, redirect regression tests, CodeQL,
-  dependency review, actionlint and workflow-contract tests.
+- Automated checks: `scripts/ci.sh`, site structure and search-index tests,
+  CodeQL, dependency review, actionlint and workflow-contract tests.
 - Dependency integrity: immutable GitHub Action references and hashed
   `.github/requirements-workflow-contracts.txt`.
 - Change history and review: Git commits, GitHub issues and pull requests.
 
-The redirect contract verifies its four navigation forms without contacting a
-live site. CI validates local syntax and workflow structure; it does not prove
-browser accessibility, deployment availability or the destination application's
-security. This repository does not release synthetic application packages.
+The site contract verifies local asset and navigation targets, stable search
+anchors, canonical URLs, the generated documentation index and the absence of
+third-party script tags without contacting a live site. CI validates local
+syntax and workflow structure; it does not prove browser rendering,
+accessibility, GitHub API availability, deployment availability or the security
+of linked projects. This repository does not release synthetic application
+packages.
 
 The owner confirmed MIT publication for original source and documentation on
 2026-10-16. The root LICENSE and THIRD_PARTY_NOTICES.md record its scope.
@@ -24,7 +28,7 @@ Maintainer knowledge and report-response attestations are recorded in
 
 ## Additional source-analysis coverage
 
-The [CodeQL workflow](../.github/workflows/codeql.yml) also analyzes the redirect JavaScript embedded in index.html. Existing language analyses remain enabled. Each language reports a separate analysis category; review its completed run and findings for the submitted revision. A passing GitHub Code Quality check does not substitute for these security analyses.
+The [CodeQL workflow](../.github/workflows/codeql.yml) analyzes the site JavaScript in `assets/js/`, the Python tools and the GitHub Actions workflows. Existing language analyses remain enabled. Each language reports a separate analysis category; review its completed run and findings for the submitted revision. A passing GitHub Code Quality check does not substitute for these security analyses.
 
 The additional-source matrix also scans GitHub Actions workflows with CodeQL.
 

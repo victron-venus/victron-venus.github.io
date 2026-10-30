@@ -1,8 +1,9 @@
 # Contributing
 
-This repository redirects the organization's root GitHub Pages address to
-`https://victron-venus.github.io/.github/`. The destination website is maintained
-in [victron-venus/.github](https://github.com/victron-venus/.github).
+This repository serves the organization website at
+**https://victron-venus.github.io/**. The site is static HTML, CSS and JavaScript;
+[`assets/js/app.js`](assets/js/app.js) adds client-side page loading, motion and
+live GitHub metadata as progressive enhancements.
 
 Report reproducible problems or suggest changes through this repository's
 GitHub issues. Include the URL, browser, expected behavior and observed behavior.
@@ -16,15 +17,16 @@ python3 -m pip install --require-hashes --only-binary=:all: -r .github/requireme
 bash scripts/ci.sh
 ```
 
-The tests verify the real HTML destination and its JavaScript, meta-refresh,
-canonical and clickable fallback forms. Negative tests cover inconsistent,
-insecure, duplicate and unexpected script targets. Syntax and workflow contracts
-also run locally. These checks do not open a browser or publish the website.
+The tests verify local assets and navigation, stable heading anchors, canonical
+URLs, the generated documentation index and the absence of third-party script
+tags. Syntax and workflow contracts also run locally. These checks do not open a
+browser, contact GitHub or publish the website.
 
-Submit a focused pull request against the current default branch,
-`feature/redirect`. Explain the behavior and validation. Preserve fixed HTTPS
-destinations and review changes to workflows or external dependencies carefully.
-Changes require successful CI and the repository's configured review rules.
+Submit a focused pull request against the default branch. Explain the behavior
+and validation. Keep the no-JavaScript fallback intact, test both desktop and
+narrow layouts, and review changes to workflows or external dependencies
+carefully. Changes require successful CI and the repository's configured review
+rules.
 
 Contribute original material under the root MIT license only when you have the right to do so. Preserve imported material's copyright notices and license terms in THIRD_PARTY_NOTICES.md.
 
@@ -34,4 +36,4 @@ Follow the [Code of Conduct](CODE_OF_CONDUCT.md), [governance](GOVERNANCE.md) an
 
 Follow [source publication](RELEASING.md) and update [change notes](CHANGELOG.md) for user-visible behavior and security fixes. Optional GitHub CLI status commands use the documented [transport profile](docs/transport-security.md).
 
-Install the pinned Python diagnostic tool with `python3 -m pip install --require-hashes --only-binary=:all: -r .github/requirements-lint.txt`. The local gate runs Ruff syntax/undefined-name/control-flow checks across authored and vendored Python with `--ignore-noqa`, plus the existing source, workflow and behavior checks. Maximum warning strictness is not claimed.
+Install the pinned Python diagnostic tool with `python3 -m pip install --require-hashes --only-binary=:all: -r .github/requirements-lint.txt`. The local gate runs Ruff syntax/undefined-name/control-flow checks across authored and vendored Python with `--ignore-noqa`, plus the existing source, workflow and site checks. Maximum warning strictness is not claimed.

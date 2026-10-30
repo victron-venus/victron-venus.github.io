@@ -1,6 +1,6 @@
 # Governance and maintenance
 
-The fixed HTTPS redirect from the organization root address to its website is maintained in this repository. Other projects retain their own source, deployment and acceptance responsibilities.
+The organization website at the root GitHub Pages address is maintained in this repository. Other projects retain their own source, deployment and acceptance responsibilities.
 
 The primary maintainer is the `4alvit` account. The maintainer owns scope, review, public-source publication, dependency updates and vulnerability handling. Contributors propose issues and pull requests; reviewers examine behavior, documentation, security and validation evidence. Automation supplies evidence and does not authorize a deployment or bypass branch protections.
 
