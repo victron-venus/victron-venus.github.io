@@ -397,38 +397,62 @@
 
   /* ---------- Colour scheme ---------- */
 
-  // The head sets data-theme before first paint; every page inherits it.
-  function activeTheme() {
-    return document.documentElement.dataset.theme === "dark" ? "dark" : "light";
+  // The head sets data-theme and data-theme-mode before first paint; every page inherits them.
+  // The toggle cycles system -> light -> dark, so following the OS stays reachable.
+  const THEME_MODES = ["system", "light", "dark"];
+  const THEME_ACTIONS = {
+    system: "Use the system colour scheme",
+    light: "Switch to light",
+    dark: "Switch to dark",
+  };
+
+  function themeMode() {
+    const mode = document.documentElement.dataset.themeMode;
+    return THEME_MODES.includes(mode) ? mode : "system";
   }
 
-  function applyTheme(theme, persist) {
-    document.documentElement.dataset.theme = theme;
+  function nextThemeMode(mode) {
+    return THEME_MODES[(THEME_MODES.indexOf(mode) + 1) % THEME_MODES.length];
+  }
+
+  function resolvedTheme(mode) {
+    if (mode !== "system") return mode;
+    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  }
+
+  function applyTheme(mode, persist) {
+    const root = document.documentElement;
+    const theme = resolvedTheme(mode);
+    root.dataset.theme = theme;
+    root.dataset.themeMode = mode;
     const meta = $('meta[name="theme-color"]');
     if (meta) meta.setAttribute("content", theme === "dark" ? "#171a17" : "#f4f3ec");
-    const next = theme === "dark" ? "light" : "dark";
-    const label = `Switch to ${next} colour scheme`;
+    const next = nextThemeMode(mode);
+    const state = mode === "system" ? "follows the system" : mode;
+    const label = `Colour scheme: ${state}. ${THEME_ACTIONS[next]}`;
     $$(".theme-toggle").forEach((button) => {
       button.setAttribute("aria-label", label);
       button.title = label;
     });
     if (!persist) return;
-    try { localStorage.setItem("vv-theme", theme); } catch (error) { /* private mode */ }
+    try {
+      if (mode === "system") localStorage.removeItem("vv-theme");
+      else localStorage.setItem("vv-theme", mode);
+    } catch (error) { /* private mode */ }
   }
 
   function initTheme() {
-    applyTheme(activeTheme(), false);
+    applyTheme(themeMode(), false);
     document.addEventListener("click", (event) => {
       const button = event.target.closest(".theme-toggle");
       if (!button) return;
-      applyTheme(activeTheme() === "dark" ? "light" : "dark", true);
-      announce(`Switched to ${activeTheme()} colour scheme`);
+      const mode = nextThemeMode(themeMode());
+      applyTheme(mode, true);
+      announce(mode === "system" ? "Colour scheme now follows the system" : `Switched to ${mode} colour scheme`);
     });
     const query = window.matchMedia("(prefers-color-scheme: dark)");
-    const follow = (event) => {
-      let stored = null;
-      try { stored = localStorage.getItem("vv-theme"); } catch (error) { /* private mode */ }
-      if (!stored) applyTheme(event.matches ? "dark" : "light", false);
+    const follow = () => {
+      if (themeMode() === "system") applyTheme("system", false);
     };
     if (query.addEventListener) query.addEventListener("change", follow);
   }
@@ -504,7 +528,7 @@
     const currentOgUrl = document.querySelector('meta[property="og:url"]');
     if (ogUrl && currentOgUrl) currentOgUrl.setAttribute("content", url.href);
 
-    applyTheme(activeTheme(), false);
+    applyTheme(themeMode(), false);
   }
 
   function swapPage(doc, url) {

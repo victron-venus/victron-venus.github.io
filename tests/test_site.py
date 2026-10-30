@@ -104,12 +104,18 @@ class PublicSiteTests(unittest.TestCase):
             text = path.read_text()
             self.assertIn('class="theme-toggle"', text, path.name)
             # The scheme must be chosen before first paint, not after app.js loads.
-            self.assertIn('document.documentElement.dataset.theme', text, path.name)
+            self.assertIn('r.dataset.theme=t', text, path.name)
+            self.assertIn('r.dataset.themeMode=p', text, path.name)
             self.assertIn('prefers-color-scheme: dark', text, path.name)
+            self.assertIn('theme-icon-auto', text, path.name)
             self.assertLess(text.index('dataset.theme'), text.index('stylesheet'), path.name)
+        self.assertIn(':root[data-theme-mode="system"] .theme-icon-auto', css)
         app = (ROOT / 'assets/js/app.js').read_text()
         self.assertIn('"vv-theme"', app)
         self.assertIn('initTheme()', app)
+        # The toggle must return to following the OS, not only flip two schemes.
+        self.assertIn('["system", "light", "dark"]', app)
+        self.assertIn('localStorage.removeItem("vv-theme")', app)
 
     def test_legacy_pages_redirect_to_single_page(self):
         index_ids = set(Page((ROOT / 'index.html').read_text()).ids)

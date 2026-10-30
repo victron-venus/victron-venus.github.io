@@ -6,15 +6,18 @@
 
 Every page now renders a light and a dark palette from one token set. The scheme
 follows the operating system by default and can be overridden with a header
-toggle that remembers the choice in local storage. Section-only palettes that
-pinned documentation pages to light values were removed, and translucent
-accents, borders and shadows received per-scheme values so both schemes keep
-equivalent contrast.
+toggle that remembers the choice in local storage. The toggle cycles
+follow-system → light → dark, so the automatic mode stays reachable after an
+explicit choice; a sun, moon or monitor icon shows the active state. Section-only
+palettes that pinned documentation pages to light values were removed, and
+translucent accents, borders and shadows received per-scheme values so both
+schemes keep equivalent contrast.
 
 ### Compatibility and upgrade
 
 Nothing changes for visitors who make no choice: the page keeps following the
-system preference. No anchors, URLs or content changed. Bump the `?v=` suffix
+system preference. Choosing the system state again removes the stored
+`vv-theme` key. No anchors, URLs or content changed. Bump the `?v=` suffix
 on shared CSS/JS when deploying further style changes so cached pages pick up
 the new theme.
 
