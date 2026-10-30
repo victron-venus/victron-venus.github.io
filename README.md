@@ -97,6 +97,24 @@ also fails when a stylesheet colours text from a token the matrix does not cover
 anchors, canonical URLs, the absence of third-party script tags and the search
 index. They do not launch a browser, contact GitHub or publish the site.
 
+The deployed interaction check is separate. [`scripts/check-interaction.mjs`](scripts/check-interaction.mjs)
+drives a real Chrome/Chromium over the DevTools pipe — no npm install and no
+downloaded browser — against the live page. In both colour schemes at 1440×900
+and 390×844 it walks every Tab stop, requires `:focus-visible` with a visible
+indicator at 3:1 contrast, then hovers representative controls and requires a
+computed style change. Run it after publication:
+
+```sh
+node scripts/check-interaction.mjs
+node scripts/check-interaction.mjs --url http://127.0.0.1:4173/
+```
+
+It is intentionally outside `scripts/ci.sh`: the pre-merge gate cannot validate
+a revision that is not deployed yet, and the runner needs a browser. The
+scheduled [live focus and hover workflow](.github/workflows/live-interaction.yml)
+runs it daily against production; pass `CHROME_PATH` or `--browser` when Chrome
+is not in a standard location.
+
 ## Content rules
 
 Keep safety limits and operating constraints in the text. Never present the

@@ -1,5 +1,40 @@
 # Source change history
 
+## 2026-10-30 — live focus and hover browser check
+
+### Changes
+
+Add [`scripts/check-interaction.mjs`](scripts/check-interaction.mjs), a
+dependency-free Chrome DevTools Protocol check for the deployed page. It drives
+the installed Chrome/Chromium over the DevTools pipe and, in both colour schemes
+at 1440×900 and 390×844, walks every Tab stop to require `:focus-visible` with a
+visible indicator at 3:1 contrast. It then hovers 17 representative controls
+and requires a computed style change. The copy button in guide code blocks now
+has hover feedback; it previously changed only the pointer. Shared asset URLs
+move to `?v=20261030s`.
+
+The check defaults to `https://victron-venus.github.io/`, accepts `--url` for a
+local server, and is run daily by the scheduled
+[`live-interaction`](.github/workflows/live-interaction.yml) workflow. It is not
+part of `scripts/ci.sh`, because the pre-merge gate runs before publication and
+cannot validate the deployed revision.
+
+### Compatibility and upgrade
+
+No URLs, anchors, markup or content changed. Running the check needs Chrome or
+Chromium and Node.js; there is no npm package or browser download. Pass
+`--browser` or set `CHROME_PATH` when the browser is not in a standard location.
+The measured limits are one browser engine, two viewport widths and computed
+styles: assistive-technology, cross-browser and pixel-level checks remain
+outside automation.
+
+### Security
+
+The check is read-only, uses a temporary browser profile that is removed on
+exit, clears the local `vv-theme` preference before each pass and sends no
+credentials. It contacts the configured page and the same-origin assets that
+page loads.
+
 ## 2026-10-30 — automated contrast check in CI
 
 ### Changes

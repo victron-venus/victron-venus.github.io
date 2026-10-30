@@ -1,0 +1,27 @@
+# The deployed site is the subject, so this check runs after publication rather
+# than in the pre-merge gate; a pull request cannot validate code not yet served.
+name: Live focus and hover
+'on':
+  schedule:
+    - cron: 20 6 * * *
+  workflow_dispatch: {}
+permissions:
+  contents: read
+concurrency:
+  group: live-interaction
+  cancel-in-progress: true
+jobs:
+  interaction:
+    name: Live keyboard and pointer states
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Harden the runner (audit outbound calls)
+        uses: step-security/harden-runner@dc2769abcc0fcfbadfc1df54081c1608579ef6b2 # v2.22.2
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - name: Check live focus and hover states
+        run: node scripts/check-interaction.mjs --url https://victron-venus.github.io/

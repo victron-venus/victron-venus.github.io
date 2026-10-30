@@ -4,6 +4,12 @@ The maintained product is the public static website plus local Python/CI tooling
 
 `bash scripts/ci.sh` runs the actual repository checks documented in CONTRIBUTING.md. Pinned Ruff checks syntax, undefined names and common control-flow errors in all maintained Python, ignoring blanket noqa markers. Required CodeQL includes the maintained JavaScript, Python and Actions source; workflow contracts and dependency review supplement it. Tests use local fixtures and do not establish live deployment, complete accessibility, all browser behavior or security of linked sites. No physical hardware test or independent penetration test is claimed.
 
+The separate live interaction check drives Chrome against the deployed page,
+walks the Tab sequence and verifies computed focus and hover states in both
+colour schemes at two widths. It establishes that the served revision applies
+its focus indicators and hover feedback in that browser; it is not a
+cross-browser, screen-reader or pixel-level accessibility audit.
+
 On 2026-10-16 the authenticated GitHub inventory had no public issues, open dependency alerts, project security advisories or secret alerts. Open Code Scanning findings were Scorecard process recommendations, not confirmed source exploits. Reassess these dated observations when new findings arrive; the absence of GitHub dependency alerts does not inspect every external executable.
 
 The primary maintainer confirms knowledge of secure design and typical application/network vulnerabilities and their prevention. No bug, feature or vulnerability reports were received outside GitHub in the preceding 12 months. There is no designated backup maintainer or tested one-week access recovery.

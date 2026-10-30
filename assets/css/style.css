@@ -745,6 +745,7 @@ footer {
 .prose a { text-decoration: underline; text-underline-offset: 3px; }
 .prose pre { position: relative; padding-top: 2.7rem; }
 .copy-code { position: absolute; right: 8px; top: 6px; background: var(--panel); border: 1px solid var(--edge-hi); border-radius: 7px; color: var(--ink); padding: 3px 9px; cursor: pointer; font-size: .72rem; }
+.copy-code:hover { border-color: var(--cyan); color: var(--cyan); }
 .wiki-nav { top: 115px; max-height: calc(100vh - 145px); overflow-y: auto; }
 .page-outline { display: flex; flex-direction: column; gap: 2px; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--edge); }
 .page-outline h2 { font-size: .65rem; letter-spacing: .1em; text-transform: uppercase; margin: 0 0 .65rem; color: var(--ink-faint); }
