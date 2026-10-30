@@ -93,6 +93,24 @@ class PublicSiteTests(unittest.TestCase):
             self.assertIn('elevate.css', text, path.name)
             self.assertIn('app.js', text, path.name)
 
+    def test_both_colour_schemes_exist_with_a_header_toggle(self):
+        css = (ROOT / 'assets/css/style.css').read_text()
+        self.assertIn('color-scheme: light dark', css)
+        self.assertIn(':root[data-theme="light"]', css)
+        self.assertIn(':root[data-theme="dark"]', css)
+        self.assertIn('light-dark(', css)
+        self.assertIn('--bg: light-dark(', css)
+        for path in [ROOT / 'index.html', ROOT / '404.html']:
+            text = path.read_text()
+            self.assertIn('class="theme-toggle"', text, path.name)
+            # The scheme must be chosen before first paint, not after app.js loads.
+            self.assertIn('document.documentElement.dataset.theme', text, path.name)
+            self.assertIn('prefers-color-scheme: dark', text, path.name)
+            self.assertLess(text.index('dataset.theme'), text.index('stylesheet'), path.name)
+        app = (ROOT / 'assets/js/app.js').read_text()
+        self.assertIn('"vv-theme"', app)
+        self.assertIn('initTheme()', app)
+
     def test_legacy_pages_redirect_to_single_page(self):
         index_ids = set(Page((ROOT / 'index.html').read_text()).ids)
         for path in [ROOT / 'projects.html', *(ROOT / 'wiki').glob('*.html')]:

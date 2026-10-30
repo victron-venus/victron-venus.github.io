@@ -1,5 +1,29 @@
 # Source change history
 
+## 2026-10-30 — light and dark colour schemes
+
+### Changes
+
+Every page now renders a light and a dark palette from one token set. The scheme
+follows the operating system by default and can be overridden with a header
+toggle that remembers the choice in local storage. Section-only palettes that
+pinned documentation pages to light values were removed, and translucent
+accents, borders and shadows received per-scheme values so both schemes keep
+equivalent contrast.
+
+### Compatibility and upgrade
+
+Nothing changes for visitors who make no choice: the page keeps following the
+system preference. No anchors, URLs or content changed. Bump the `?v=` suffix
+on shared CSS/JS when deploying further style changes so cached pages pick up
+the new theme.
+
+### Security
+
+The preference is stored under `vv-theme` in local storage only; no cookies,
+accounts or third-party requests are added. The no-flash script is inline and
+optional: without JavaScript the page still follows the system preference.
+
 ## 2026-10-30 — root site and dynamic presentation
 
 ### Changes

@@ -1,9 +1,19 @@
 /* Shared portal theme. Editorial layout, native controls, no remote fonts. */
 :root {
-  --bg: #171a17; --bg-deep: #121512; --panel: #222721; --panel-hi: #2d352a;
-  --edge: #3b4437; --edge-hi: #64745b; --ink: #f1f2eb; --ink-dim: #bac3b3;
-  --ink-faint: #a0ad97; --amber: #d5eca4; --amber-dim: #a7bb7b;
-  --cyan: #a3d7ce; --cyan-dim: #7bafa5;
+  color-scheme: light dark;
+  --bg: light-dark(#f4f3ec, #171a17);
+  --bg-deep: light-dark(#ecebe1, #121512);
+  --panel: light-dark(#e7eadf, #222721);
+  --panel-hi: light-dark(#dce2d1, #2d352a);
+  --edge: light-dark(#c9d0be, #3b4437);
+  --edge-hi: light-dark(#8b987b, #64745b);
+  --ink: light-dark(#20271e, #f1f2eb);
+  --ink-dim: light-dark(#4b5845, #bac3b3);
+  --ink-faint: light-dark(#52624b, #a0ad97);
+  --amber: light-dark(#406324, #d5eca4);
+  --amber-dim: light-dark(#608041, #a7bb7b);
+  --cyan: light-dark(#176156, #a3d7ce);
+  --cyan-dim: light-dark(#33766b, #7bafa5);
   --font-display: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-body: var(--font-display); --font-mono: ui-monospace, "SFMono-Regular", Consolas, monospace;
   --max-w: 1260px; --radius: 18px;
@@ -110,6 +120,32 @@ a:hover { text-decoration: underline; }
   gap: 0.45rem;
   border: 1px solid var(--edge);
   background: var(--panel);
+}
+
+/* Colour scheme: system by default, explicit choice when the toggle is used. */
+:root[data-theme="light"] { color-scheme: light; }
+:root[data-theme="dark"] { color-scheme: dark; }
+.theme-toggle {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--edge);
+  border-radius: 99px;
+  background: transparent;
+  color: var(--ink-dim);
+  cursor: pointer;
+  transition: color .2s ease, border-color .2s ease, background .2s ease;
+}
+.theme-toggle:hover { color: var(--ink); border-color: var(--edge-hi); background: var(--panel); }
+.theme-toggle svg { width: 17px; height: 17px; }
+.theme-icon-sun { display: none; }
+:root[data-theme="dark"] .theme-icon-sun { display: block; }
+:root[data-theme="dark"] .theme-icon-moon { display: none; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) .theme-icon-sun { display: block; }
+  :root:not([data-theme]) .theme-icon-moon { display: none; }
 }
 
 /* ---------- Hero ---------- */
@@ -641,7 +677,7 @@ footer {
 }
 
 /* Public entry points */
-.nav { top: 16px; width: min(calc(100% - 40px), 1260px); margin: 16px auto 0; border: 1px solid var(--edge); border-radius: 100px; box-shadow: 0 6px 28px #0002; }
+.nav { top: 16px; width: min(calc(100% - 40px), 1260px); margin: 16px auto 0; border: 1px solid var(--edge); border-radius: 100px; box-shadow: 0 6px 28px light-dark(rgba(45, 50, 38, .1), rgba(0, 0, 0, .13)); }
 .nav-inner { height: 66px; padding-inline: 24px; position: relative; gap: 1rem; }
 .brand { letter-spacing: -.04em; font-size: 1.05rem; }
 .nav-links a { font-family: var(--font-body); font-size: .9rem; border-radius: 99px; }
@@ -650,7 +686,7 @@ footer {
 .mobile-nav summary, .doc-search summary { list-style: none; cursor: pointer; padding: .5rem .85rem; border-radius: 99px; color: var(--ink); font-size: .85rem; }
 .mobile-nav summary::-webkit-details-marker, .doc-search summary::-webkit-details-marker { display: none; }
 .doc-search summary { background: var(--panel-hi); white-space: nowrap; }
-.mobile-links, .search-panel { position: absolute; top: calc(100% + 12px); right: 0; padding: 24px; background: var(--bg-deep); border: 1px solid var(--edge-hi); box-shadow: 0 18px 70px #0005; border-radius: 20px; width: min(520px, calc(100vw - 40px)); }
+.mobile-links, .search-panel { position: absolute; top: calc(100% + 12px); right: 0; padding: 24px; background: var(--bg-deep); border: 1px solid var(--edge-hi); box-shadow: 0 18px 70px light-dark(rgba(45, 50, 38, .18), rgba(0, 0, 0, .31)); border-radius: 20px; width: min(520px, calc(100vw - 40px)); }
 .mobile-links { display: grid; gap: 16px; width: 240px; }
 .search-panel label { display: block; margin-bottom: 12px; font-weight: 600; }
 .search-panel input { width: 100%; padding: 12px; background: var(--panel); border: 1px solid var(--edge-hi); border-radius: 10px; color: var(--ink); }
@@ -689,7 +725,7 @@ footer {
 .stats { font-family: var(--font-body); font-size: .75rem; gap: .6rem 1.5rem; }
 .stats span::before { content: none; }
 .section { padding-block: 5rem; }
-.proj { padding: 1.5rem; gap: .85rem; box-shadow: 0 3px 12px #0001; }
+.proj { padding: 1.5rem; gap: .85rem; box-shadow: 0 3px 12px light-dark(rgba(45, 50, 38, .06), rgba(0, 0, 0, .07)); }
 .proj h3 { font-family: var(--font-mono); font-size: .95rem; letter-spacing: -.025em; }
 .proj p { font-size: .88rem; }
 .wcard { padding: 1.5rem; transition: background .2s; }
@@ -698,8 +734,7 @@ footer {
 .wcard h3 { font-size: 1.1rem; color: var(--ink); }
 .wcard p { font-size: .85rem; }
 
-/* Reading surfaces share the same components with a paper palette. */
-.docs-page { --bg: #f4f3ec; --bg-deep: #eeeee5; --panel: #e7eadf; --panel-hi: #dce2d1; --edge: #c9d0be; --edge-hi: #8b987b; --ink: #20271e; --ink-dim: #4b5845; --ink-faint: #52624b; --amber: #406324; --amber-dim: #608041; --cyan: #176156; --cyan-dim: #33766b; }
+/* Reading surfaces reuse the shared palette so every page follows the active colour scheme. */
 .docs-page .section { padding-top: 3.5rem; }
 .docs-page .prose h1 { font-size: clamp(2.1rem, 4vw, 3.4rem); letter-spacing: -.05em; line-height: 1.12; font-weight: 570; margin: 1rem 0 1.75rem; }
 .prose > p { margin-block: .9rem; }

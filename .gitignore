@@ -2,3 +2,5 @@
 # Local Python validation caches
 __pycache__/
 *.py[cod]
+A*S.md
+DESIGN.md

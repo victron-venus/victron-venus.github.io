@@ -395,6 +395,44 @@
 
   /* ---------- Year ---------- */
 
+  /* ---------- Colour scheme ---------- */
+
+  // The head sets data-theme before first paint; every page inherits it.
+  function activeTheme() {
+    return document.documentElement.dataset.theme === "dark" ? "dark" : "light";
+  }
+
+  function applyTheme(theme, persist) {
+    document.documentElement.dataset.theme = theme;
+    const meta = $('meta[name="theme-color"]');
+    if (meta) meta.setAttribute("content", theme === "dark" ? "#171a17" : "#f4f3ec");
+    const next = theme === "dark" ? "light" : "dark";
+    const label = `Switch to ${next} colour scheme`;
+    $$(".theme-toggle").forEach((button) => {
+      button.setAttribute("aria-label", label);
+      button.title = label;
+    });
+    if (!persist) return;
+    try { localStorage.setItem("vv-theme", theme); } catch (error) { /* private mode */ }
+  }
+
+  function initTheme() {
+    applyTheme(activeTheme(), false);
+    document.addEventListener("click", (event) => {
+      const button = event.target.closest(".theme-toggle");
+      if (!button) return;
+      applyTheme(activeTheme() === "dark" ? "light" : "dark", true);
+      announce(`Switched to ${activeTheme()} colour scheme`);
+    });
+    const query = window.matchMedia("(prefers-color-scheme: dark)");
+    const follow = (event) => {
+      let stored = null;
+      try { stored = localStorage.getItem("vv-theme"); } catch (error) { /* private mode */ }
+      if (!stored) applyTheme(event.matches ? "dark" : "light", false);
+    };
+    if (query.addEventListener) query.addEventListener("change", follow);
+  }
+
   function initYear() {
     $$("[data-year]").forEach((el) => { el.textContent = new Date().getFullYear(); });
   }
@@ -466,9 +504,7 @@
     const currentOgUrl = document.querySelector('meta[property="og:url"]');
     if (ogUrl && currentOgUrl) currentOgUrl.setAttribute("content", url.href);
 
-    const theme = doc.querySelector('meta[name="theme-color"]');
-    const currentTheme = document.querySelector('meta[name="theme-color"]');
-    if (theme && currentTheme) currentTheme.setAttribute("content", theme.content);
+    applyTheme(activeTheme(), false);
   }
 
   function swapPage(doc, url) {
@@ -592,6 +628,7 @@
     normalizeHeaderLinks();
     initHeader();
     initRouter();
+    initTheme();
     initPage(document);
     initScrollSpy();
   }
