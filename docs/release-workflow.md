@@ -22,6 +22,13 @@ regression tests. The tests validate local assets and navigation, stable heading
 anchors, canonical URLs, the absence of third-party script tags and the
 generated index. They do not open a browser or contact GitHub.
 
+The separate live interaction check does open a browser and contact the
+deployed site. `node scripts/check-interaction.mjs` drives the installed
+Chrome/Chromium over the DevTools pipe, walks every Tab stop in both colour
+schemes at desktop and mobile widths, and verifies focus indicators and hover
+feedback. Use `--url http://127.0.0.1:4173/` for the local server. It is outside
+`scripts/ci.sh` because it validates a published revision.
+
 For local visual review, serve the repository over loopback:
 
 ```sh
@@ -49,6 +56,13 @@ for pull requests, merge-queue entries, default-branch pushes, the nightly
 schedule and manual dispatch. A green gate covers the checked source commit; it
 does not publish the website or establish live browser behavior, GitHub API
 availability or deployment availability.
+
+`live-interaction.yml` is separate from the gate. Because `main` is the Pages
+source while `feature/redirect` is the default branch, it triggers on pushes to
+`main`, polls the Pages build API until that commit is published, and then runs
+the browser check against the deployed URL. A failure here means the live
+revision lost a focus indicator or hover change; it does not block the push or
+roll back the deployment.
 
 ## Publication and verification
 
