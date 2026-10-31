@@ -11,7 +11,7 @@
     "bash scripts/ci.sh"
   ],
   "notes": [
-    "Fixed HTTPS redirect and local source/workflow validation; no application release pipeline."
+    "Static organization website with progressive enhancements and local source/workflow validation; no application release pipeline."
   ],
   "visibility": "public",
   "single_entry_ci": true

@@ -1,6 +1,6 @@
 # Quality evidence and limits
 
-The maintained product is public static source plus local Python/CI tooling, not an application package. Original code/documentation uses MIT; imported helper notices and external services retain their own terms. The full Git SHA identifies source, and [source change history](../CHANGELOG.md) records relevant behavior and compatibility.
+The maintained product is the public static website plus local Python/CI tooling, not an application package. Original code/documentation uses MIT; imported helper notices and external services retain their own terms. The full Git SHA identifies source, and [source change history](../CHANGELOG.md) records relevant behavior and compatibility.
 
 `bash scripts/ci.sh` runs the actual repository checks documented in CONTRIBUTING.md. Pinned Ruff checks syntax, undefined names and common control-flow errors in all maintained Python, ignoring blanket noqa markers. Required CodeQL includes the maintained JavaScript, Python and Actions source; workflow contracts and dependency review supplement it. Tests use local fixtures and do not establish live deployment, complete accessibility, all browser behavior or security of linked sites. No physical hardware test or independent penetration test is claimed.
 
