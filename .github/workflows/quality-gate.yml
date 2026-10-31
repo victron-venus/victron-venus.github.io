@@ -6,7 +6,7 @@ name: Quality gate
   workflow_call: {}
   push:
     branches:
-      - feature/redirect
+      - main
   schedule:
     - cron: 35 5 * * *
   workflow_dispatch: {}

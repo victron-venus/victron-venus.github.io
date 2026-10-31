@@ -1,7 +1,7 @@
 # The deployed site is the subject, so this check runs after publication rather
 # than in the pre-merge gate; a pull request cannot validate code not yet served.
-# `main` is the Pages source branch while the repository default branch is
-# feature/redirect, so the workflow waits for the Pages build of this commit.
+# `main` is both the default branch and the Pages source; wait for the Pages
+# build of this exact commit before checking the published site.
 name: Live focus and hover
 'on':
   push:

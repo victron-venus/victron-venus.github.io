@@ -1,7 +1,7 @@
 {
   "repository": "victron-venus/victron-venus.github.io",
   "mode": "validation-only",
-  "default_branch": "feature/redirect",
+  "default_branch": "main",
   "validation_workflows": [
     "validate.yml",
     "codeql.yml",
