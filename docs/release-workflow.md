@@ -79,3 +79,57 @@ The local workflow-contract validator is also vendored from
 `victron-venus/venus-os-ci-toolkit`; preserve its regression tests when updating
 it. Review any generated workflow change against the repository's actual
 validation-only policy.
+
+## Default-branch and analysis runbook
+
+Keep these settings aligned when maintaining the website:
+
+- GitHub's default branch, `.release-policy.json`, and the push triggers in
+  `quality-gate.yml` and `scorecards.yml` use `main`.
+- GitHub Pages publishes `main` at `/` using its existing branch-based build.
+  The public URL remains `https://victron-venus.github.io/`.
+- The active ruleset targets the default branch and requires the strict
+  **CI gate** check. Verify the effective rules on `main`, not just the
+  ruleset's existence.
+- SonarQube Cloud uses automatic analysis of the default branch and pull
+  requests. Keep automatic analysis enabled; do not add a second scanner to CI.
+
+After a default-branch change, inspect **Project > Branches** in SonarQube
+Cloud. The existing main branch can follow GitHub's change automatically,
+preserving its analysis history. A renamed branch can still display the last
+analysis of the old commit. Confirm the analyzed commit SHA before treating
+that result as evidence for the published website.
+
+Automatic analysis runs on pushes to the default branch and pull request
+branches. A GitHub Actions manual dispatch does not itself submit code to
+SonarQube Cloud. After the next reviewed change is merged, wait for the main
+branch analysis and verify that its SHA matches the merge commit. Compare the
+result against the existing quality gate and new-code definition; do not reset
+the baseline, relax thresholds, or exclude source files to turn a failure green.
+
+For the GitHub-side checks after a branch transition, dispatch the existing
+workflows against `main`:
+
+```sh
+gh workflow run quality-gate.yml --repo victron-venus/victron-venus.github.io --ref main
+gh workflow run scorecards.yml --repo victron-venus/victron-venus.github.io --ref main
+```
+
+Record the run URLs, checked commit, and final results. Scorecard must actually
+run: a skipped job from its default-branch guard is not a successful analysis.
+Separately verify the exact-commit Pages deployment and the live interaction
+check. Keep the former branch until its commits and any active users have been
+accounted for; a default-branch change does not require deleting it.
+
+If a transition must be rolled back, first coordinate a pause in website
+changes. Restore the GitHub default setting together with the matching release
+policy and workflow triggers, preserving site content and the Pages source.
+This rollback intentionally keeps Pages publishing from `main`, even if the
+restored default branch differs, so it does not republish the retired site.
+Then recheck effective branch protection, Sonar's branch mapping and analyzed
+SHA, Scorecard, and the live URL. Changing only the GitHub default is not a
+complete rollback.
+
+References: [GitHub default branches](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-branches-in-your-repository/changing-the-default-branch),
+[Pages publishing sources](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site),
+and [SonarQube Cloud automatic analysis](https://docs.sonarsource.com/sonarqube-cloud/analyzing-source-code/automatic-analysis).
