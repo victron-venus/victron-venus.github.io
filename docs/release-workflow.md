@@ -4,7 +4,7 @@ This repository serves the organization website at
 `https://victron-venus.github.io/`. It contains static HTML, CSS and JavaScript
 with no application packages or beta, RC and stable release channels. The site
 is published through this repository's GitHub Pages settings. The current
-default branch is `feature/redirect`.
+default branch and Pages source are both `main`.
 
 ## Local validation
 
@@ -57,9 +57,9 @@ schedule and manual dispatch. A green gate covers the checked source commit; it
 does not publish the website or establish live browser behavior, GitHub API
 availability or deployment availability.
 
-`live-interaction.yml` is separate from the gate. Because `main` is the Pages
-source while `feature/redirect` is the default branch, it triggers on pushes to
-`main`, polls the Pages build API until that commit is published, and then runs
+`live-interaction.yml` is separate from the gate. It triggers on pushes to
+`main`, the default branch and Pages source, polls the Pages build API until
+that exact commit is published, and then runs
 the browser check against the deployed URL. A failure here means the live
 revision lost a focus indicator or hover change; it does not block the push or
 roll back the deployment.
