@@ -124,6 +124,8 @@ accounted for; a default-branch change does not require deleting it.
 If a transition must be rolled back, first coordinate a pause in website
 changes. Restore the GitHub default setting together with the matching release
 policy and workflow triggers, preserving site content and the Pages source.
+This rollback intentionally keeps Pages publishing from `main`, even if the
+restored default branch differs, so it does not republish the retired site.
 Then recheck effective branch protection, Sonar's branch mapping and analyzed
 SHA, Scorecard, and the live URL. Changing only the GitHub default is not a
 complete rollback.
