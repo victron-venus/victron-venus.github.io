@@ -7,4 +7,5 @@ python3 scripts/build-search-index.py --check
 python3 scripts/check-contrast.py
 python3 scripts/workflow_contracts.py
 python3 -m unittest discover -s tests -p 'test_*.py'
+node --test tests/navigation.test.mjs
 python3 -m unittest discover -s .github/workflow-tests -p 'test_*.py'

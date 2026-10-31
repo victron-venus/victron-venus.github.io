@@ -623,6 +623,14 @@
     document.head.append(hint);
   }
 
+  function reportNavigationError(error) {
+    state.navigating = state.routing = false;
+    document.documentElement.classList.remove("is-routing");
+    progress(0);
+    announce("Navigation failed. Reload this page or try the link again.");
+    console.error("Page navigation failed", error);
+  }
+
   function initRouter() {
     document.addEventListener("click", (event) => {
       if (event.defaultPrevented || event.button !== 0) return;
@@ -632,7 +640,7 @@
       if (samePageHash(link)) return;
       if (link.href === location.href) return;
       event.preventDefault();
-      navigate(link.href);
+      navigate(link.href).catch(reportNavigationError);
     });
 
     document.addEventListener("mouseover", (event) => {
@@ -641,7 +649,7 @@
     }, { passive: true });
 
     window.addEventListener("popstate", () => {
-      navigate(location.href, { history: "none" });
+      navigate(location.href, { history: "none" }).catch(reportNavigationError);
     });
     window.addEventListener("hashchange", initNavState);
   }
