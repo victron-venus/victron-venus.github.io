@@ -1,1 +1,2 @@
+# Regenerate with uv pip compile .github/requirements-lint.in --generate-hashes --universal --python-version=3.12 --output-file=.github/requirements-lint.txt
 ruff==0.16.5
