@@ -64,6 +64,26 @@ the browser check against the deployed URL. A failure here means the live
 revision lost a focus indicator or hover change; it does not block the push or
 roll back the deployment.
 
+## Automated dependency review
+
+Dependency updates from Renovate (`renovate[bot]` or the managed
+`californiantiramisu` account) may receive automatic approval from a separate
+trusted bot identity. This policy covers every enabled update type, including
+major versions, and does not require a human review for those updates. It is an
+automated policy approval, not a human inspection of the changes.
+
+The approval and merge callers execute trusted default-branch workflow code and
+read GitHub metadata; they never check out or execute pull-request source. The
+merge evaluator requires a trusted approval of the current head, the
+`automerge` label, a non-draft same-repository PR targeting the default branch,
+and successful required checks. Repository protection and unresolved review
+threads remain enforced.
+
+Completion of **Auto Approve PRs** wakes the merge evaluator for the normal bot
+flow. A separate human approval arriving after CI and earlier evaluations have
+finished can be picked up by the next hourly recovery run. That scheduled run
+is subject to GitHub scheduling delays; it is not an immediate-review guarantee.
+
 ## Publication and verification
 
 Website publication is managed separately through this repository's GitHub
