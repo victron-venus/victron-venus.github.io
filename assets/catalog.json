@@ -1,0 +1,614 @@
+{
+  "version": 1,
+  "source": "index.html",
+  "count": 41,
+  "groups": [
+    "ai",
+    "archived",
+    "control",
+    "dashboards",
+    "dbus",
+    "gateways",
+    "observability",
+    "sensing",
+    "tooling",
+    "voice"
+  ],
+  "projects": [
+    {
+      "name": "dbus-mqtt-battery",
+      "repo": "victron-venus/dbus-mqtt-battery",
+      "url": "https://github.com/victron-venus/dbus-mqtt-battery",
+      "group": "dbus",
+      "summary": "MQTT → D-Bus bridge for JBD BMS batteries on Venus OS, with DVCC support.",
+      "languages": [
+        "Python"
+      ],
+      "tags": [
+        "battery",
+        "dvcc"
+      ],
+      "org": "org",
+      "duplicate": false
+    },
+    {
+      "name": "dbus-tasmota-pv",
+      "repo": "victron-venus/dbus-tasmota-pv",
+      "url": "https://github.com/victron-venus/dbus-tasmota-pv",
+      "group": "dbus",
+      "summary": "Tasmota power meter → D-Bus PV inverter bridge. Turns a smart plug into a PV meter.",
+      "languages": [
+        "Python"
+      ],
+      "tags": [
+        "pv-inverter",
+        "tasmota"
+      ],
+      "org": "org",
+      "duplicate": false
+    },
+    {
+      "name": "dbus-esphome-grid-sensor",
+      "repo": "victron-venus/dbus-esphome-grid-sensor",
+      "url": "https://github.com/victron-venus/dbus-esphome-grid-sensor",
+      "group": "dbus",
+      "summary": "ESP32 CT sensor for grid power monitoring, exposed as a D-Bus service on Venus OS.",
+      "languages": [
+        "Python"
+      ],
+      "tags": [
+        "esp32",
+        "grid"
+      ],
+      "org": "org",
+      "duplicate": false
+    },
+    {
+      "name": "dbus-emporia-vue",
+      "repo": "victron-venus/dbus-emporia-vue",
+      "url": "https://github.com/victron-venus/dbus-emporia-vue",
+      "group": "dbus",
+      "summary": "Emporia Vue submeter channels as individual D-Bus AC loads, fed by Home Assistant WebSocket power data.",
+      "languages": [
+        "Python"
+      ],
+      "tags": [
+        "submetering",
+        "acload"
+      ],
+      "org": "org",
+      "duplicate": false
+    },
+    {
+      "name": "dbus-virtual-battery",
+      "repo": "victron-venus/dbus-virtual-battery",
+      "url": "https://github.com/victron-venus/dbus-virtual-battery",
+      "group": "dbus",
+      "summary": "Derived battery measurements for chains without a BMS. Consumes the MQTT battery driver’s freshness contract; does not establish physical BMS permission.",
+      "languages": [
+        "Python"
+      ],
+      "tags": [
+        "derived-telemetry"
+      ],
+      "org": "org",
+      "duplicate": false
+    },
+    {
+      "name": "dbus-ev",
+      "repo": "victron-venus/dbus-ev",
+      "url": "https://github.com/victron-venus/dbus-ev",
+      "group": "dbus",
+      "summary": "Vehicle telemetry from Mercedes or Home Assistant, plus optional integrated Mercedes charger telemetry. Read the migration guide before replacing the archived standalone charger.",
+      "languages": [
+        "Python"
+      ],
+      "tags": [],
+      "org": "org",
+      "duplicate": false
+    },
+    {
+      "name": "dbus-pump",
+      "repo": "victron-venus/dbus-pump",
+      "url": "https://github.com/victron-venus/dbus-pump",
+      "group": "dbus",
+      "summary": "Home Assistant water tank, pump and valve data exposed as native Venus services, with the water automation and command path owned by this bridge.",
+      "languages": [
+        "Python"
+      ],
+      "tags": [],
+      "org": "org",
+      "duplicate": false
+    },
+    {
+      "name": "dbus-event-log",
+      "repo": "victron-venus/dbus-event-log",
+      "url": "https://github.com/victron-venus/dbus-event-log",
+      "group": "dbus",
+      "summary": "Optional D-Bus event recorder with SQLite/TimescaleDB, MQTT and CLI tools. Method capture requires explicit bus permissions; it is not a lossless audit or a native SetupHelper package.",
+      "languages": [
+        "Python"
+      ],
+      "tags": [
+        "audit-log",
+        "timescaledb"
+      ],
+      "org": "org",
+      "duplicate": false
+    },
+    {
+      "name": "esphome-jbd-bms-mqtt",
+      "repo": "victron-venus/esphome-jbd-bms-mqtt",
+      "url": "https://github.com/victron-venus/esphome-jbd-bms-mqtt",
+      "group": "sensing",
+      "summary": "ESP32 Bluetooth proxy for JBD BMS batteries, publishing cell voltages and SOC to MQTT.",
+      "languages": [
+        "ESPHome"
+      ],
+      "tags": [
+        "ble",
+        "jbd-bms"
+      ],
+      "org": "org",
+      "duplicate": false
+    },
+    {
+      "name": "esphome-ble-sensor-patterns",
+      "repo": "4alvit/esphome-ble-sensor-patterns",
+      "url": "https://github.com/4alvit/esphome-ble-sensor-patterns",
+      "group": "sensing",
+      "summary": "Production-ready ESPHome patterns for BLE sensors — iBeacon, Eddystone, custom services, passive scanning, HA integration.",
+      "languages": [],
+      "tags": [
+        "ibeacon",
+        "xiaomi",
+        "reference"
+      ],
+      "org": "4alvit",
+      "duplicate": false
+    },
+    {
+      "name": "inverter-control",
+      "repo": "victron-venus/inverter-control",
+      "url": "https://github.com/victron-venus/inverter-control",
+      "group": "control",
+      "summary": "Grid-zero feed-in control with Home Assistant integration and web dashboard. The core ESS brain of the stack.",
+      "languages": [
+        "Python"
+      ],
+      "tags": [
+        "ess",
+        "quattro"
+      ],
+      "org": "org",
+      "duplicate": false
+    },
+    {
+      "name": "inverter-climate",
+      "repo": "victron-venus/inverter-climate",
+      "url": "https://github.com/victron-venus/inverter-climate",
+      "group": "control",
+      "summary": "Native Venus OS thermostat integration via Home Assistant and Google Nest. Publishes room temperature and optional setpoint and Heat/Off controls in the stock GUI v2 Switch pane and VRM Remote Console. Energy-aware preheating is enabled separately; observation is the default.",
+      "languages": [
+        "Python"
+      ],
+      "tags": [
+        "thermostat",
+        "SetupHelper"
+      ],
+      "org": "org",
+      "duplicate": false
+    },
+    {
+      "name": "inverter-dashboard-go",
+      "repo": "victron-venus/inverter-dashboard-go",
+      "url": "https://github.com/victron-venus/inverter-dashboard-go",
+      "group": "dashboards",
+      "summary": "Real-time dashboard as a single Go binary — runs directly on the Cerbo GX, optional direct Home Assistant control.",
+      "languages": [
+        "Go"
+      ],
+      "tags": [
+        "websocket",
+        "cerbo"
+      ],
+      "org": "org",
+      "duplicate": false
+    },
+    {
+      "name": "inverter-dashboard",
+      "repo": "victron-venus/inverter-dashboard",
+      "url": "https://github.com/victron-venus/inverter-dashboard",
+      "group": "dashboards",
+      "summary": "The original Python dashboard, shipped as Docker image alvit/inverter-dashboard for NAS deployments.",
+      "languages": [
+        "Python"
+      ],
+      "tags": [
+        "docker"
+      ],
+      "org": "org",
+      "duplicate": false
+    },
+    {
+      "name": "inverter-dashboard-vue",
+      "repo": "victron-venus/inverter-dashboard-vue",
+      "url": "https://github.com/victron-venus/inverter-dashboard-vue",
+      "group": "dashboards",
+      "summary": "Shared Vue 3 SPA and reusable UI component library for the Go, Python and desktop dashboards.",
+      "languages": [
+        "Vue"
+      ],
+      "tags": [
+        "spa",
+        "ui-library"
+      ],
+      "org": "org",
+      "duplicate": false
+    },
+    {
+      "name": "inverter-desktop",
+      "repo": "victron-venus/inverter-desktop",
+      "url": "https://github.com/victron-venus/inverter-desktop",
+      "group": "dashboards",
+      "summary": "Tauri desktop client wrapping the Vue dashboard, with native installers per release.",
+      "languages": [
+        "Vue"
+      ],
+      "tags": [
+        "tauri"
+      ],
+      "org": "org",
+      "duplicate": false
+    },
+    {
+      "name": "inverter-web-vitrine",
+      "repo": "victron-venus/inverter-web-vitrine",
+      "url": "https://github.com/victron-venus/inverter-web-vitrine",
+      "group": "dashboards",
+      "summary": "Read-only public status page backed by inverter-gateway through an authenticated server-side proxy. Access credentials stay off the browser.",
+      "languages": [],
+      "tags": [],
+      "org": "org",
+      "duplicate": false
+    },
+    {
+      "name": "amazon-echo-home-voice",
+      "repo": "4alvit/amazon-echo-home-voice",
+      "url": "https://github.com/4alvit/amazon-echo-home-voice",
+      "group": "voice",
+      "summary": "Alexa custom skill backend for energy speech and screen cards. Uses authenticated gateway reports; developer setup, certification and physical device acceptance are separate steps.",
+      "languages": [
+        "Python"
+      ],
+      "tags": [],
+      "org": "4alvit",
+      "duplicate": false
+    },
+    {
+      "name": "google-home-voice-stats",
+      "repo": "4alvit/google-home-voice-stats",
+      "url": "https://github.com/4alvit/google-home-voice-stats",
+      "group": "voice",
+      "summary": "Standalone Cast video and speech reports using the gateway’s read-only energy API. Optional Home Assistant/Matter triggers add a voice entry point; Cast alone does not add voice commands.",
+      "languages": [
+        "Python"
+      ],
+      "tags": [],
+      "org": "4alvit",
+      "duplicate": false
+    },
+    {
+      "name": "solar-forecast-langgraph",
+      "repo": "4alvit/solar-forecast-langgraph",
+      "url": "https://github.com/4alvit/solar-forecast-langgraph",
+      "group": "ai",
+      "summary": "LangGraph solar forecasts from weather and historical generation. Connecting a forecast to live control requires a configured and tested consumer.",
+      "languages": [
+        "Python"
+      ],
+      "tags": [
+        "openmeteo",
+        "arima"
+      ],
+      "org": "4alvit",
+      "duplicate": false
+    },
+    {
+      "name": "energy-data-rag-pipeline",
+      "repo": "4alvit/energy-data-rag-pipeline",
+      "url": "https://github.com/4alvit/energy-data-rag-pipeline",
+      "group": "ai",
+      "summary": "RAG pipeline over Victron documentation — pgvector, LangChain, FastAPI.",
+      "languages": [
+        "Python"
+      ],
+      "tags": [
+        "pgvector",
+        "rag"
+      ],
+      "org": "4alvit",
+      "duplicate": false
+    },
+    {
+      "name": "mcp-venus-os",
+      "repo": "4alvit/mcp-venus-os",
+      "url": "https://github.com/4alvit/mcp-venus-os",
+      "group": "ai",
+      "summary": "MCP server for Venus OS management — D-Bus, MQTT, and safety-constrained control for AI assistants.",
+      "languages": [
+        "Python"
+      ],
+      "tags": [
+        "mcp",
+        "claude"
+      ],
+      "org": "4alvit",
+      "duplicate": false
+    },
+    {
+      "name": "venus-os-observability",
+      "repo": "victron-venus/venus-os-observability",
+      "url": "https://github.com/victron-venus/venus-os-observability",
+      "group": "observability",
+      "summary": "OpenTelemetry/Prometheus for Venus OS — D-Bus event tracing, inverter metrics, distributed tracing to Tempo/Jaeger.",
+      "languages": [
+        "Python"
+      ],
+      "tags": [
+        "otel",
+        "tempo"
+      ],
+      "org": "org",
+      "duplicate": false
+    },
+    {
+      "name": "mqtt-observability-opentelemetry",
+      "repo": "4alvit/mqtt-observability-opentelemetry",
+      "url": "https://github.com/4alvit/mqtt-observability-opentelemetry",
+      "group": "observability",
+      "summary": "OTel stack for any MQTT system — message interception with W3C trace context, broker metrics exporter, ready-to-run Compose.",
+      "languages": [
+        "Python"
+      ],
+      "tags": [
+        "w3c-trace",
+        "mosquitto"
+      ],
+      "org": "4alvit",
+      "duplicate": false
+    },
+    {
+      "name": "inverter-monitoring",
+      "repo": "victron-venus/inverter-monitoring",
+      "url": "https://github.com/victron-venus/inverter-monitoring",
+      "group": "observability",
+      "summary": "Telegraf + InfluxDB + Grafana monitoring stack for long-term inverter metrics.",
+      "languages": [
+        "Python"
+      ],
+      "tags": [
+        "tig-stack",
+        "grafana"
+      ],
+      "org": "org",
+      "duplicate": false
+    },
+    {
+      "name": "inverter-gateway",
+      "repo": "victron-venus/inverter-gateway",
+      "url": "https://github.com/victron-venus/inverter-gateway",
+      "group": "gateways",
+      "summary": "Authenticated Cerbo MQTT snapshots, SSE and scoped commands over HTTPS; read-only energy reports also serve voice adapters. Designed for a companion host behind Cloudflare Access.",
+      "languages": [
+        "Rust"
+      ],
+      "tags": [],
+      "org": "org",
+      "duplicate": false
+    },
+    {
+      "name": "fastapi-mqtt-gateway",
+      "repo": "4alvit/fastapi-mqtt-gateway",
+      "url": "https://github.com/4alvit/fastapi-mqtt-gateway",
+      "group": "gateways",
+      "summary": "Production-ready REST/WebSocket → MQTT bridge with auth and topic ACLs.",
+      "languages": [
+        "Python"
+      ],
+      "tags": [
+        "fastapi",
+        "bridge"
+      ],
+      "org": "4alvit",
+      "duplicate": false
+    },
+    {
+      "name": "venus-os-integration-patterns",
+      "repo": "victron-venus/venus-os-integration-patterns",
+      "url": "https://github.com/victron-venus/venus-os-integration-patterns",
+      "group": "gateways",
+      "summary": "Reference implementations: MQTT↔D-Bus bridges, HTTP API wrappers, scheduled control, HA automations.",
+      "languages": [
+        "Python"
+      ],
+      "tags": [
+        "reference",
+        "ha-automation"
+      ],
+      "org": "org",
+      "duplicate": false
+    },
+    {
+      "name": "venus-os-ci-toolkit",
+      "repo": "victron-venus/venus-os-ci-toolkit",
+      "url": "https://github.com/victron-venus/venus-os-ci-toolkit",
+      "group": "tooling",
+      "summary": "Reusable GitHub Actions workflows: ruff, mypy, pytest, golangci-lint, govulncheck, Scorecard, auto-approve. Pinned by SHA everywhere.",
+      "languages": [],
+      "tags": [
+        "reusable-workflows"
+      ],
+      "org": "org",
+      "duplicate": false
+    },
+    {
+      "name": "integration-tests",
+      "repo": "victron-venus/integration-tests",
+      "url": "https://github.com/victron-venus/integration-tests",
+      "group": "tooling",
+      "summary": "Cross-repo integration tests against a live MQTT broker and simulated Venus OS services.",
+      "languages": [
+        "Python"
+      ],
+      "tags": [
+        "mqtt"
+      ],
+      "org": "org",
+      "duplicate": false
+    },
+    {
+      "name": "dbus-service-template",
+      "repo": "4alvit/dbus-service-template",
+      "url": "https://github.com/4alvit/dbus-service-template",
+      "group": "tooling",
+      "summary": "Copier template that scaffolds a production-ready D-Bus service for Venus OS in one command.",
+      "languages": [
+        "Python"
+      ],
+      "tags": [
+        "copier"
+      ],
+      "org": "4alvit",
+      "duplicate": false
+    },
+    {
+      "name": "SetupHelper",
+      "repo": "victron-venus/SetupHelper",
+      "url": "https://github.com/victron-venus/SetupHelper",
+      "group": "tooling",
+      "summary": "Helper scripts for Venus OS setup and configuration.",
+      "languages": [],
+      "tags": [
+        "scripts"
+      ],
+      "org": "org",
+      "duplicate": false
+    },
+    {
+      "name": "iot-project-builder-profile",
+      "repo": "4alvit/iot-project-builder-profile",
+      "url": "https://github.com/4alvit/iot-project-builder-profile",
+      "group": "tooling",
+      "summary": "Automated engineering profile generator for IoT developers, based on GitHub activity.",
+      "languages": [
+        "Python"
+      ],
+      "tags": [
+        "github-api"
+      ],
+      "org": "4alvit",
+      "duplicate": false
+    },
+    {
+      "name": "terraform-cloudflare-inverter-gateway",
+      "repo": "victron-venus/terraform-cloudflare-inverter-gateway",
+      "url": "https://github.com/victron-venus/terraform-cloudflare-inverter-gateway",
+      "group": "tooling",
+      "summary": "Reusable Cloudflare Access application, policy and service-token configuration for inverter-gateway. Import existing resources before managing them with Terraform.",
+      "languages": [
+        "HCL"
+      ],
+      "tags": [],
+      "org": "org",
+      "duplicate": false
+    },
+    {
+      "name": "terraform-github-victron",
+      "repo": "4alvit/terraform-github-victron",
+      "url": "https://github.com/4alvit/terraform-github-victron",
+      "group": "tooling",
+      "summary": "Terraform IaC for the victron-venus GitHub organization — repos, settings, branch protection.",
+      "languages": [
+        "HCL"
+      ],
+      "tags": [
+        "hcp-terraform"
+      ],
+      "org": "4alvit",
+      "duplicate": false
+    },
+    {
+      "name": "terraform-github-4alvit",
+      "repo": "4alvit/terraform-github-4alvit",
+      "url": "https://github.com/4alvit/terraform-github-4alvit",
+      "group": "tooling",
+      "summary": "Terraform IaC for the personal GitHub account infrastructure.",
+      "languages": [
+        "HCL"
+      ],
+      "tags": [
+        "iac"
+      ],
+      "org": "4alvit",
+      "duplicate": false
+    },
+    {
+      "name": "4alvit/profile",
+      "repo": "4alvit/4alvit",
+      "url": "https://github.com/4alvit/4alvit",
+      "group": "tooling",
+      "summary": "GitHub profile README with the full ecosystem architecture diagram.",
+      "languages": [],
+      "tags": [
+        "profile"
+      ],
+      "org": "4alvit",
+      "duplicate": false
+    },
+    {
+      "name": ".github",
+      "repo": "victron-venus/.github",
+      "url": "https://github.com/victron-venus/.github",
+      "group": "tooling",
+      "summary": "Organization profile, public project catalog, installation guides and this static website.",
+      "languages": [],
+      "tags": [],
+      "org": "org",
+      "duplicate": false
+    },
+    {
+      "name": "victron-venus.github.io",
+      "repo": "victron-venus/victron-venus.github.io",
+      "url": "https://github.com/victron-venus/victron-venus.github.io",
+      "group": "tooling",
+      "summary": "Organization website published at the root domain: landing page, project catalog and documentation guides.",
+      "languages": [],
+      "tags": [],
+      "org": "org",
+      "duplicate": false
+    },
+    {
+      "name": "dbus-evcharger",
+      "repo": "victron-venus/dbus-evcharger",
+      "url": "https://github.com/victron-venus/dbus-evcharger",
+      "group": "archived",
+      "summary": "Archived standalone charger bridge. Maintained Mercedes vehicle and charger telemetry now lives in dbus-ev; follow its migration guide and never run both charger owners.",
+      "languages": [],
+      "tags": [],
+      "org": "org",
+      "duplicate": false
+    },
+    {
+      "name": "venus-os-governance",
+      "repo": "victron-venus/venus-os-governance",
+      "url": "https://github.com/victron-venus/venus-os-governance",
+      "group": "archived",
+      "summary": "Archived policy-engine experiment. Current ESS validity, limit and watchdog checks belong to inverter-control; this repository is not an installed control gate.",
+      "languages": [],
+      "tags": [],
+      "org": "org",
+      "duplicate": false
+    }
+  ]
+}
