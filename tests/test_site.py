@@ -48,11 +48,16 @@ class PublicSiteTests(unittest.TestCase):
         self.assertTrue(any('battery' in e['text'].lower() for e in entries))
 
     def test_public_pages_have_local_assets_and_no_duplicate_ids(self):
+        # Cloudflare Web Analytics is the one permitted remote script; every
+        # other asset must resolve to a tracked local file.
+        allowed = {'static.cloudflareinsights.com'}
         for path in [*ROOT.glob('*.html'), *(ROOT / 'wiki').glob('*.html')]:
             page = Page(path.read_text())
             self.assertEqual(len(page.ids), len(set(page.ids)), path.name)
             for value in page.resources:
                 url = urlsplit(value)
+                if url.netloc in allowed:
+                    continue
                 self.assertFalse(url.netloc or url.scheme, value)
                 target = ROOT / unquote(url.path.lstrip('/')) if url.path.startswith('/') else path.parent / unquote(url.path)
                 self.assertTrue(target.is_file(), value)
@@ -136,9 +141,13 @@ class PublicSiteTests(unittest.TestCase):
                 self.assertNotIn('/.github/', match.group(1), path.name)
 
     def test_static_pages_do_not_load_third_party_scripts(self):
+        # Cloudflare Web Analytics is the single approved third-party runtime
+        # request: cookie-free, no cross-site identifiers, and disclosed in the
+        # README. Anything else must stay local.
+        allowed = {'static.cloudflareinsights.com'}
         for path in [ROOT / 'index.html', ROOT / '404.html', ROOT / 'projects.html', *sorted((ROOT / 'wiki').glob('*.html'))]:
             for source in re.findall(r'<script[^>]+src="([^"]+)"', path.read_text()):
-                self.assertFalse(urlsplit(source).netloc, f'{path.name}: {source}')
+                self.assertIn(urlsplit(source).netloc, {''} | allowed, f'{path.name}: {source}')
 
 
 if __name__ == '__main__':

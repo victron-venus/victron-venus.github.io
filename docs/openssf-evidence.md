@@ -16,7 +16,7 @@ public repository maintenance scope.
 
 The site contract verifies local asset and navigation targets, stable search
 anchors, canonical URLs, the generated documentation index and the absence of
-third-party script tags without contacting a live site. CI validates local
+unapproved third-party script tags without contacting a live site. CI validates local
 syntax and workflow structure; it does not prove browser rendering,
 accessibility, GitHub API availability, deployment availability or the security
 of linked projects. This repository does not release synthetic application
