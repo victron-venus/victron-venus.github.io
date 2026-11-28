@@ -18,7 +18,7 @@ bash scripts/ci.sh
 ```
 
 The tests verify local assets and navigation, stable heading anchors, canonical
-URLs, the generated documentation index and the absence of third-party script
+URLs, the generated documentation index and approved third-party script
 tags. Syntax and workflow contracts also run locally. These checks do not open a
 browser, contact GitHub or publish the website.
 

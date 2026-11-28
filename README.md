@@ -52,8 +52,10 @@ With JavaScript enabled:
   remote search service.
 
 `prefers-reduced-motion`, `prefers-reduced-transparency`, keyboard focus and
-print styles are supported. The GitHub API request and the opt-in Google
-Translate widget are the only third-party runtime requests.
+print styles are supported. The GitHub API request, the opt-in Google Translate
+widget and Cloudflare Web Analytics are the third-party runtime requests.
+Analytics is cookieless, aggregates page views only, and stores no cross-site
+identifier; it is loaded from `static.cloudflareinsights.com`.
 
 ## Preview locally
 
@@ -94,7 +96,7 @@ index, light and dark contrast and the site regression tests. The contrast check
 resolves the `light-dark()` palette and fails below WCAG AA for every listed
 pair: 4.5:1 for normal text and 3:1 for field borders, focus rings and icons. It
 also fails when a stylesheet colours text from a token the matrix does not cover. The site tests verify local assets and navigation, stable
-anchors, canonical URLs, the absence of third-party script tags and the search
+anchors, canonical URLs, the absence of unapproved third-party script tags and the search
 index. They do not launch a browser, contact GitHub or publish the site.
 
 The deployed interaction check is separate. [`scripts/check-interaction.mjs`](scripts/check-interaction.mjs)

@@ -19,8 +19,8 @@ The entry point checks Python, JSON, YAML and shell syntax, runs actionlint,
 verifies immutable workflow references and CI dependencies, confirms the
 generated documentation search index is current, and executes the site
 regression tests. The tests validate local assets and navigation, stable heading
-anchors, canonical URLs, the absence of third-party script tags and the
-generated index. They do not open a browser or contact GitHub.
+anchors, canonical URLs, the absence of unapproved third-party script tags and
+the generated index. They do not open a browser or contact GitHub.
 
 The separate live interaction check does open a browser and contact the
 deployed site. `node scripts/check-interaction.mjs` drives the installed
